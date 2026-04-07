@@ -1,16 +1,29 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { Suspense, useState, type FormEvent } from "react";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { AuthLayout, AuthInput } from "@/components/auth-layout";
 
-export default function LoginPage() {
+function RegisteredBanner(): React.ReactNode {
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered") === "true";
 
+  if (!registered) return null;
+
+  return (
+    <div
+      className="text-xs px-3 py-2.5 rounded-lg mb-4"
+      style={{ background: "var(--bull-muted)", color: "var(--bull-foreground)" }}
+    >
+      Đăng ký thành công — vui lòng chờ admin duyệt tài khoản.
+    </div>
+  );
+}
+
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -50,14 +63,9 @@ export default function LoginPage() {
         </>
       }
     >
-      {registered && (
-        <div
-          className="text-xs px-3 py-2.5 rounded-lg mb-4"
-          style={{ background: "var(--bull-muted)", color: "var(--bull-foreground)" }}
-        >
-          Đăng ký thành công — vui lòng chờ admin duyệt tài khoản.
-        </div>
-      )}
+      <Suspense>
+        <RegisteredBanner />
+      </Suspense>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <AuthInput
