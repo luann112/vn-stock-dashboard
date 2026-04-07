@@ -1,0 +1,369 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+/* Dark mode: toggle via .dark class on <html> */
+@variant dark (&:where(.dark, .dark *));
+
+/* Fonts loaded via <link> in layout.tsx to avoid @import ordering issues */
+
+/* ============================================================
+   VN STOCK DASHBOARD — Design System v2
+   Theme: White × Blue · Clean · Minimal · Glassmorphism
+   ============================================================ */
+
+:root {
+  --font-size: 14px;
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Fira Code", "Cascadia Code", monospace;
+
+  /* ── Core UI — light glassmorphism ── */
+  --background:            #f8faff;
+  --foreground:            #0f172a;
+  --card:                  rgba(255, 255, 255, 0.72);
+  --card-foreground:       #0f172a;
+  --popover:               rgba(255, 255, 255, 0.95);
+  --popover-foreground:    #0f172a;
+
+  /* Primary: energetic blue */
+  --primary:               #3b82f6;  /* blue-500 */
+  --primary-foreground:    #ffffff;
+  --primary-hover:         #2563eb;  /* blue-600 */
+
+  --secondary:             rgba(239, 246, 255, 0.8);  /* blue-50 glass */
+  --secondary-foreground:  #1e3a8a;
+
+  --muted:                 rgba(241, 245, 249, 0.65);
+  --muted-foreground:      #64748b;
+
+  --accent:                rgba(219, 234, 254, 0.85); /* blue-100 glass */
+  --accent-foreground:     #1d4ed8;  /* blue-700 */
+
+  --destructive:           #dc2626;
+  --destructive-foreground:#ffffff;
+
+  --border:                rgba(59, 130, 246, 0.14);
+  --input:                 rgba(255, 255, 255, 0.85);
+  --input-border:          rgba(59, 130, 246, 0.25);
+  --ring:                  #3b82f6;
+
+  /* ── Stock semantic colors ── */
+  --bull:                  #059669;  /* emerald-600 — good contrast on white */
+  --bull-muted:            rgba(5, 150, 105, 0.10);
+  --bull-foreground:       #065f46;  /* emerald-800 */
+  --bear:                  #dc2626;  /* red-600 */
+  --bear-muted:            rgba(220, 38, 38, 0.10);
+  --bear-foreground:       #7f1d1d;  /* red-900 */
+  --neutral:               #64748b;
+  --neutral-muted:         rgba(100, 116, 139, 0.10);
+  --neutral-foreground:    #1e293b;
+  --signal-buy:            #059669;
+  --signal-sell:           #dc2626;
+  --signal-hold:           #d97706;  /* amber-600 */
+
+  /* ── Chart palette ── */
+  --chart-1:  #3b82f6;  /* blue   — primary series */
+  --chart-2:  #10b981;  /* emerald */
+  --chart-3:  #f59e0b;  /* amber  */
+  --chart-4:  #ef4444;  /* red    */
+  --chart-5:  #8b5cf6;  /* violet */
+  --chart-6:  #06b6d4;  /* cyan   */
+  --chart-7:  #84cc16;  /* lime   */
+  --chart-8:  #f97316;  /* orange */
+  --chart-9:  #ec4899;  /* pink   */
+  --chart-10: #6366f1;  /* indigo */
+
+  /* ── Candlestick colors (light mode) ── */
+  --candle-bull:        #059669;
+  --candle-bull-wick:   #047857;
+  --candle-bear:        #dc2626;
+  --candle-bear-wick:   #b91c1c;
+
+  /* ── Heatmap gradient steps ── */
+  --heat-strong-bull:  rgba(5, 150, 105, 0.82);
+  --heat-mid-bull:     rgba(5, 150, 105, 0.58);
+  --heat-light-bull:   rgba(5, 150, 105, 0.30);
+  --heat-faint-bull:   rgba(5, 150, 105, 0.13);
+  --heat-neutral:      rgba(100, 116, 139, 0.11);
+  --heat-faint-bear:   rgba(220, 38, 38, 0.13);
+  --heat-light-bear:   rgba(220, 38, 38, 0.30);
+  --heat-mid-bear:     rgba(220, 38, 38, 0.58);
+  --heat-strong-bear:  rgba(220, 38, 38, 0.82);
+
+  /* ── Glassmorphism helpers ── */
+  --glass-blur:     16px;
+  --glass-shadow:   0 8px 32px rgba(59, 130, 246, 0.10), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --glass-border:   rgba(255, 255, 255, 0.60);
+
+  /* ── Radius ── */
+  --radius: 12px;
+
+  /* ── Sidebar ── */
+  --sidebar-width:     240px;
+  --sidebar-collapsed: 64px;
+  --header-height:     56px;
+  --panel-gap:         16px;
+
+  /* ── Font weights ── */
+  --font-weight-light:    300;
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+}
+
+/* ── Dark mode (optional override) ── */
+.dark {
+  --background:        #0a0a0f;
+  --foreground:        #f1f5f9;
+  --card:              rgba(17, 19, 24, 0.85);
+  --card-foreground:   #f1f5f9;
+  --popover:           #1a1d24;
+  --popover-foreground:#f1f5f9;
+  --primary:           #60a5fa;  /* blue-400 — brighter in dark */
+  --primary-foreground:#0a0a0f;
+  --primary-hover:     #3b82f6;
+  --secondary:         #1e2430;
+  --secondary-foreground:#f1f5f9;
+  --muted:             rgba(22, 26, 34, 0.8);
+  --muted-foreground:  #64748b;
+  --accent:            rgba(30, 64, 175, 0.25);
+  --accent-foreground: #bfdbfe;  /* blue-200 */
+  --destructive:       #ef4444;
+  --destructive-foreground:#fafafa;
+  --border:            rgba(59, 130, 246, 0.15);
+  --input:             rgba(22, 26, 34, 0.9);
+  --input-border:      rgba(59, 130, 246, 0.20);
+  --ring:              #60a5fa;
+  --glass-shadow:      0 8px 32px rgba(0, 0, 0, 0.30);
+  --glass-border:      rgba(255, 255, 255, 0.08);
+
+  --bull:              #34d399;
+  --bull-muted:        rgba(52, 211, 153, 0.12);
+  --bull-foreground:   #d1fae5;
+  --bear:              #f87171;
+  --bear-muted:        rgba(248, 113, 113, 0.12);
+  --bear-foreground:   #fee2e2;
+  --neutral:           #94a3b8;
+  --neutral-muted:     rgba(148, 163, 184, 0.12);
+  --neutral-foreground:#e2e8f0;
+
+  --chart-1:  #60a5fa;
+  --chart-2:  #34d399;
+  --chart-3:  #fbbf24;
+  --chart-4:  #f87171;
+  --chart-5:  #a78bfa;
+  --chart-6:  #67e8f9;
+  --chart-7:  #a3e635;
+  --chart-8:  #fb923c;
+  --chart-9:  #f472b6;
+  --chart-10: #818cf8;
+
+  --candle-bull:      #34d399;
+  --candle-bull-wick: #10b981;
+  --candle-bear:      #f87171;
+  --candle-bear-wick: #ef4444;
+}
+
+/* ── Tailwind v4 @theme mapping ── */
+@theme inline {
+  --color-background:          var(--background);
+  --color-foreground:          var(--foreground);
+  --color-card:                var(--card);
+  --color-card-foreground:     var(--card-foreground);
+  --color-popover:             var(--popover);
+  --color-popover-foreground:  var(--popover-foreground);
+  --color-primary:             var(--primary);
+  --color-primary-foreground:  var(--primary-foreground);
+  --color-secondary:           var(--secondary);
+  --color-secondary-foreground:var(--secondary-foreground);
+  --color-muted:               var(--muted);
+  --color-muted-foreground:    var(--muted-foreground);
+  --color-accent:              var(--accent);
+  --color-accent-foreground:   var(--accent-foreground);
+  --color-destructive:         var(--destructive);
+  --color-destructive-foreground:var(--destructive-foreground);
+  --color-border:              var(--border);
+  --color-input:               var(--input);
+  --color-input-border:        var(--input-border);
+  --color-ring:                var(--ring);
+
+  --color-bull:                var(--bull);
+  --color-bull-muted:          var(--bull-muted);
+  --color-bull-foreground:     var(--bull-foreground);
+  --color-bear:                var(--bear);
+  --color-bear-muted:          var(--bear-muted);
+  --color-bear-foreground:     var(--bear-foreground);
+  --color-neutral:             var(--neutral);
+  --color-signal-buy:          var(--signal-buy);
+  --color-signal-sell:         var(--signal-sell);
+  --color-signal-hold:         var(--signal-hold);
+
+  --color-chart-1:  var(--chart-1);
+  --color-chart-2:  var(--chart-2);
+  --color-chart-3:  var(--chart-3);
+  --color-chart-4:  var(--chart-4);
+  --color-chart-5:  var(--chart-5);
+  --color-chart-6:  var(--chart-6);
+  --color-chart-7:  var(--chart-7);
+  --color-chart-8:  var(--chart-8);
+  --color-chart-9:  var(--chart-9);
+  --color-chart-10: var(--chart-10);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-family);
+  --font-mono: var(--font-mono);
+}
+
+/* ── Background gradient mesh ── */
+@layer base {
+  html {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+    min-height: 100%;
+    /* Glassmorphism mesh gradient — light mode */
+    background:
+      radial-gradient(ellipse 90% 60% at 15% 0%,   rgba(219, 234, 254, 0.70) 0%, transparent 65%),
+      radial-gradient(ellipse 70% 50% at 85% 100%,  rgba(237, 233, 254, 0.60) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 50%  50%,  rgba(224, 242, 254, 0.30) 0%, transparent 70%),
+      #f8faff;
+    background-attachment: fixed;
+  }
+
+  /* Dark mode mesh */
+  html.dark {
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(30, 64, 175, 0.20) 0%, transparent 65%),
+      radial-gradient(ellipse 60% 50% at 90% 100%,  rgba(88, 28, 135, 0.15) 0%, transparent 65%),
+      #0a0a0f;
+  }
+
+  * {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+
+  body {
+    background: transparent; /* gradient lives on html */
+    color: var(--foreground);
+    font-family: var(--font-family);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbar — clean light style */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.20); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.40); }
+}
+
+/* ── Utility classes ── */
+@layer utilities {
+  /* ── Glassmorphism card ── */
+  .glass-card {
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-sidebar {
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    box-shadow: 4px 0 32px rgba(59, 130, 246, 0.06), 1px 0 0 var(--border);
+  }
+
+  .glass-panel {
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  /* ── Numeric font ── */
+  .font-numeric {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Price sizes ── */
+  .text-price-xl { font-size: 2rem;    font-weight: 600; font-family: var(--font-mono); }
+  .text-price-lg { font-size: 1.5rem;  font-weight: 600; font-family: var(--font-mono); }
+  .text-price-md { font-size: 1rem;    font-weight: 500; font-family: var(--font-mono); }
+  .text-price-sm { font-size: 0.875rem;font-weight: 500; font-family: var(--font-mono); }
+  .text-price-xs { font-size: 0.75rem; font-weight: 400; font-family: var(--font-mono); }
+
+  /* ── Bull / Bear text ── */
+  .text-bull    { color: var(--bull); }
+  .text-bear    { color: var(--bear); }
+  .text-neutral { color: var(--neutral); }
+  .bg-bull-muted { background-color: var(--bull-muted); }
+  .bg-bear-muted { background-color: var(--bear-muted); }
+
+  /* ── Signal badges ── */
+  .badge-buy {
+    background: var(--bull-muted);
+    color: var(--bull-foreground);
+    border: 1px solid rgba(5, 150, 105, 0.20);
+  }
+  .badge-sell {
+    background: var(--bear-muted);
+    color: var(--bear-foreground);
+    border: 1px solid rgba(220, 38, 38, 0.20);
+  }
+  .badge-hold {
+    background: rgba(217, 119, 6, 0.10);
+    color: #92400e;
+    border: 1px solid rgba(217, 119, 6, 0.20);
+  }
+  .dark .badge-hold {
+    color: var(--signal-hold);
+  }
+
+  /* ── Heatmap cells ── */
+  .heatmap-bull     { background: color-mix(in srgb, var(--bull) 12%, transparent); color: var(--bull); }
+  .heatmap-bear     { background: color-mix(in srgb, var(--bear) 12%, transparent); color: var(--bear); }
+  .heatmap-none     { background: transparent; color: var(--muted-foreground); }
+  .heatmap-conflict { background: color-mix(in srgb, var(--neutral) 10%, transparent); color: var(--neutral); }
+
+  /* ── Card variants ── */
+  .card-terminal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .card-glass {
+    background: var(--card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* ── Primary button ── */
+  .btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius);
+    font-weight: var(--font-weight-semibold);
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.30);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.40);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  /* ── Layout helpers ── */
+  .layout-sidebar          { width: var(--sidebar-width); }
+  .layout-sidebar-collapsed{ width: var(--sidebar-collapsed); }
+}
