@@ -4,7 +4,6 @@ import { useState, type FormEvent } from "react";
 import { UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { API_BASE_URL } from "@/constants";
 import { AuthLayout, AuthInput } from "@/components/auth-layout";
 
 export default function RegisterPage() {
@@ -22,7 +21,7 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
