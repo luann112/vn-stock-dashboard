@@ -3,6 +3,10 @@ import Credentials from "next-auth/providers/credentials";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+interface UpdateSessionData {
+  status?: string;
+}
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
@@ -40,13 +44,24 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // Lần đầu login — gán toàn bộ fields từ FastAPI response
       if (user) {
         token["id"]          = user.id;
         token["status"]      = user.status;
         token["role"]        = user.role;
         token["accessToken"] = user.accessToken;
       }
+
+      // useSession().update({ status }) từ client — dùng data được pass trực tiếp
+      // thay vì server-side fetch (tránh fail silent do network issue).
+      if (trigger === "update" && session) {
+        const data = session as UpdateSessionData;
+        if (data.status) {
+          token["status"] = data.status;
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {

@@ -1,6 +1,7 @@
 export const REFRESH_INTERVAL = 30_000;
 export const CHART_REFRESH_INTERVAL = 60_000;
 export const SIGNAL_REFRESH_INTERVAL = 300_000;
+export const PENDING_STATUS_POLL_INTERVAL = 10_000;
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "https://vn-stock-api.railway.app";

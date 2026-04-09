@@ -1,32 +1,64 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Clock, LogOut } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { REFRESH_INTERVAL } from "@/constants";
+import { PENDING_STATUS_POLL_INTERVAL } from "@/constants";
+
+interface StatusResponse {
+  status: string;
+}
 
 export default function PendingPage() {
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { data: session, update } = useSession();
 
-  // Poll session mỗi 30 giây — nếu status đổi thành approved thì redirect
+  /**
+   * Guard — tránh double-redirect khi checkStatus chạy song song
+   * (mount + interval overlap).
+   */
+  const redirectingRef = useRef(false);
+
+  /**
+   * Poll /api/proxy/auth/status mỗi 10 giây (+ check ngay lúc mount).
+   *
+   * Khi backend xác nhận approved/rejected:
+   *   1. Pass status trực tiếp vào update({ status }) để jwt callback
+   *      cập nhật token mà không cần server-side fetch (tránh fail silent).
+   *   2. window.location.href — full navigation, đảm bảo middleware
+   *      đọc cookie mới sau khi update() đã set xong.
+   *
+   * Không dùng getSession() — trả JWT cache, không phản ánh status mới từ DB.
+   */
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const { getSession } = await import("next-auth/react");
-      const fresh = await getSession();
-      if (fresh?.user?.status === "approved") {
-        router.push("/");
-      }
-    }, REFRESH_INTERVAL);
+    const checkStatus = async (): Promise<void> => {
+      if (redirectingRef.current) return;
 
+      try {
+        const res = await fetch("/api/proxy/auth/status");
+        if (!res.ok) return;
+
+        const data = (await res.json()) as StatusResponse;
+
+        if (data.status === "approved" || data.status === "rejected") {
+          redirectingRef.current = true;
+          // Pass status vào update() — jwt callback nhận qua param `session`
+          await update({ status: data.status });
+          window.location.href = data.status === "approved" ? "/" : "/rejected";
+        }
+      } catch {
+        // Silent — thử lại lần sau
+      }
+    };
+
+    // Check ngay lúc mount — xử lý reload sau khi đã được approve
+    void checkStatus();
+
+    const interval = setInterval(checkStatus, PENDING_STATUS_POLL_INTERVAL);
     return () => clearInterval(interval);
-  }, [router]);
+  }, [update]);
 
   return (
-    <div
-      className="flex h-screen items-center justify-center p-6"
-    >
+    <div className="flex h-screen items-center justify-center p-6">
       <div
         className="w-full max-w-sm rounded-2xl border p-8 text-center card-glass"
         style={{ borderColor: "var(--border)" }}
@@ -53,8 +85,8 @@ export default function PendingPage() {
         )}
 
         <p className="text-sm mb-8" style={{ color: "var(--muted-foreground)" }}>
-          Tài khoản của bạn đang chờ admin phê duyệt. Trang này sẽ tự động chuyển hướng khi
-          tài khoản được kích hoạt.
+          Tài khoản của bạn đang chờ admin phê duyệt. Trang này sẽ tự động
+          chuyển hướng khi tài khoản được kích hoạt.
         </p>
 
         <button
