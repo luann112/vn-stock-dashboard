@@ -35,11 +35,12 @@ export const HEAT_CELL_SIZE = 90;
 
 // ── Signal badge config ─────────────────────────────────────
 
-export const SIGNAL_CONFIG = {
-  BUY:  { className: "badge-buy",  label: "MUA" },
-  SELL: { className: "badge-sell", label: "BÁN" },
-  HOLD: { className: "badge-hold", label: "GIỮ" },
-} as const satisfies Record<string, { className: string; label: string }>;
+export const SIGNAL_CONFIG: Record<string, { className: string; label: string }> = {
+  BUY:     { className: "badge-buy",  label: "MUA" },
+  SELL:    { className: "badge-sell", label: "BÁN" },
+  HOLD:    { className: "badge-hold", label: "GIỮ" },
+  UNKNOWN: { className: "badge-hold", label: "—" },
+};
 
 // ── Table headers ───────────────────────────────────────────
 

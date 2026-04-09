@@ -15,7 +15,7 @@ export function AlertRow({ symbol, filter }: AlertRowProps) {
   const { data: signal } = useSignal(symbol);
 
   if (!signal) return null;
-  if (filter !== "ALL" && signal.signal !== filter) return null;
+  if (filter !== "ALL" && signal.signal.toUpperCase() !== filter) return null;
 
   const date = new Date(signal.analyzed_at || Date.now());
   const timeStr = isNaN(date.getTime())

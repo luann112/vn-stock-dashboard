@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "@/components/session-provider";
+import { AuthSync } from "@/components/auth-sync";
 
 export const metadata: Metadata = {
   title: "VN Stock Dashboard",
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <SessionProvider>
+            <AuthSync />
             {children}
           </SessionProvider>
         </ThemeProvider>

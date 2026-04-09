@@ -1,4 +1,3 @@
-import { getSession } from "next-auth/react";
 import { API_BASE_URL, COMPANY_NAMES } from "@/constants";
 import type { PriceData, SignalData, OHLCVBar, HistoryResponse } from "@/types";
 
@@ -21,6 +20,18 @@ export function isApiError(err: unknown): err is ApiError {
 }
 
 // ---------------------------------------------------------------------------
+// Token cache — synced from useSession() via AuthSync component.
+// Eliminates per-fetch getSession() calls (each was an HTTP roundtrip).
+// ---------------------------------------------------------------------------
+
+let _cachedToken: string | null = null;
+
+/** Called by AuthSync to keep the module-level token in sync with NextAuth session. */
+export function setAuthToken(token: string | null): void {
+  _cachedToken = token;
+}
+
+// ---------------------------------------------------------------------------
 // Fetchers
 // ---------------------------------------------------------------------------
 
@@ -32,15 +43,12 @@ export async function fetcher<T>(url: string): Promise<T> {
 }
 
 /**
- * Authenticated fetcher — reads FastAPI JWT from NextAuth session on every call.
- * Session is stored in a cookie (httpOnly), retrieved via getSession().
+ * Authenticated fetcher — reads cached FastAPI JWT (set by AuthSync).
+ * No HTTP roundtrip to /api/auth/session on every call.
  */
 export async function authedFetcher<T>(url: string): Promise<T> {
-  const session = typeof window !== "undefined" ? await getSession() : null;
-  const token   = session?.user?.accessToken;
-
-  const headers: HeadersInit = token
-    ? { Authorization: `Bearer ${token}` }
+  const headers: HeadersInit = _cachedToken
+    ? { Authorization: `Bearer ${_cachedToken}` }
     : {};
 
   const res = await fetch(url, { headers });

@@ -1,4 +1,4 @@
-export type Signal = "BUY" | "SELL" | "HOLD";
+export type Signal = "BUY" | "SELL" | "HOLD" | "UNKNOWN" | "buy" | "sell" | "hold" | "unknown";
 
 /** GET /market/quote/{symbol} */
 export interface PriceData {
