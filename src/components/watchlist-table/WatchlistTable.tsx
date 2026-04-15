@@ -1,7 +1,14 @@
+"use client";
+
+import { useState, useCallback } from "react";
 import { Bot } from "lucide-react";
 import { StockRow } from "@/components/stock-row";
 import { SkeletonRow } from "@/components/skeleton";
+import { RSBreakdownPanel } from "@/components/rs-breakdown-panel";
+import { RSParamSelector } from "@/components/rs-param-selector";
+import { useRSScore } from "@/hooks/useRSScore";
 import { WATCHLIST_TABLE_HEADERS } from "@/constants";
+import type { RSParams, RSScoreData } from "@/types";
 
 export interface WatchlistTableProps {
   symbols: string[];
@@ -9,6 +16,19 @@ export interface WatchlistTableProps {
   isLoading?: boolean;
   onSelect: (symbol: string) => void;
   onRemove: (symbol: string) => void;
+}
+
+/** Fetches + renders RS breakdown inline below a table row. */
+function RSExpandedRow({ symbol, rsParams }: { symbol: string; rsParams?: Partial<RSParams> }) {
+  const { data } = useRSScore(symbol, rsParams);
+  if (!data) return null;
+  return (
+    <tr>
+      <td colSpan={8} className="px-4 py-3" style={{ background: "var(--muted)" }}>
+        <RSBreakdownPanel data={data} />
+      </td>
+    </tr>
+  );
 }
 
 function EmptyState() {
@@ -46,17 +66,29 @@ export function WatchlistTable({
   onSelect,
   onRemove,
 }: WatchlistTableProps) {
+  const [rsExpandedSymbol, setRsExpandedSymbol] = useState<string | null>(null);
+  const [rsParams, setRsParams] = useState<Partial<RSParams>>({});
+
+  const handleRSClick = useCallback((symbol: string) => {
+    setRsExpandedSymbol((prev) => (prev === symbol ? null : symbol));
+  }, []);
+
   return (
     <div
       className="rounded-xl border overflow-hidden card-glass"
       style={{ borderColor: "var(--border)" }}
     >
+      {/* RS Param Selector — shared for all rows */}
+      <div className="px-4 py-2" style={{ borderBottom: "1px solid var(--border)" }}>
+        <RSParamSelector value={rsParams} onChange={setRsParams} />
+      </div>
+
       <table className="w-full text-sm">
         <thead>
           <tr style={{ background: "var(--muted)" }}>
             {WATCHLIST_TABLE_HEADERS.map(({ label, align }) => (
               <th
-                key={label}
+                key={label || "actions"}
                 className={`px-4 py-3 text-xs font-semibold uppercase tracking-wide text-${align}`}
                 style={{ color: "var(--muted-foreground)" }}
               >
@@ -72,13 +104,24 @@ export function WatchlistTable({
             <EmptyState />
           ) : (
             symbols.map((symbol) => (
-              <StockRow
-                key={symbol}
-                symbol={symbol}
-                isSelected={selectedSymbol === symbol}
-                onSelect={() => onSelect(symbol)}
-                onRemove={() => onRemove(symbol)}
-              />
+              <>
+                <StockRow
+                  key={symbol}
+                  symbol={symbol}
+                  isSelected={selectedSymbol === symbol}
+                  rsParams={rsParams}
+                  onSelect={() => onSelect(symbol)}
+                  onRemove={() => onRemove(symbol)}
+                  onRSClick={handleRSClick}
+                />
+                {rsExpandedSymbol === symbol && (
+                  <RSExpandedRow
+                    key={`rs-${symbol}`}
+                    symbol={symbol}
+                    rsParams={rsParams}
+                  />
+                )}
+              </>
             ))
           )}
         </tbody>

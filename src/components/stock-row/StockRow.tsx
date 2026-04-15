@@ -3,21 +3,29 @@
 import { ChevronDown, ChevronRight, Trash2 } from "lucide-react";
 import { usePrice } from "@/hooks/usePrice";
 import { useSignal } from "@/hooks/useSignal";
+import { useRSScore } from "@/hooks/useRSScore";
 import { getCompanyName } from "@/lib/api";
 import { formatPrice, formatVolume, formatPercent } from "@/lib/utils";
 import { SignalBadge } from "@/components/signal-badge";
 import { RsiGauge } from "@/components/rsi-gauge";
+import { RSScoreBadge } from "@/components/rs-score-badge";
+import type { RSParams } from "@/types";
 
 export interface StockRowProps {
   symbol: string;
   isSelected: boolean;
+  rsParams?: Partial<RSParams>;
   onSelect: () => void;
   onRemove: () => void;
+  onRSClick?: (symbol: string) => void;
 }
 
-export function StockRow({ symbol, isSelected, onSelect, onRemove }: StockRowProps) {
+export function StockRow({
+  symbol, isSelected, rsParams, onSelect, onRemove, onRSClick,
+}: StockRowProps) {
   const { data: price } = usePrice(symbol);
   const { data: signal } = useSignal(symbol);
+  const { data: rsScore } = useRSScore(symbol, rsParams);
 
   const isPositive = (price?.change_pct ?? 0) >= 0;
 
@@ -89,6 +97,19 @@ export function StockRow({ symbol, isSelected, onSelect, onRemove }: StockRowPro
         {signal
           ? <SignalBadge signal={signal.signal} />
           : <span style={{ color: "var(--muted-foreground)" }}>—</span>}
+      </td>
+
+      <td className="px-4 py-3 text-center">
+        {rsScore ? (
+          <RSScoreBadge
+            score={rsScore.score}
+            signal={rsScore.signal}
+            isTrendingUp={rsScore.breakdown.rs_trending_direction === "up"}
+            onClick={onRSClick ? () => onRSClick(symbol) : undefined}
+          />
+        ) : (
+          <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>—</span>
+        )}
       </td>
 
       <td className="px-4 py-3">

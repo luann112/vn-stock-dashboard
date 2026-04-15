@@ -1,6 +1,7 @@
 export const REFRESH_INTERVAL = 30_000;
 export const CHART_REFRESH_INTERVAL = 60_000;
 export const SIGNAL_REFRESH_INTERVAL = 300_000;
+export const RS_REFRESH_INTERVAL = 300_000;
 export const PENDING_STATUS_POLL_INTERVAL = 10_000;
 
 export const API_BASE_URL =
@@ -51,6 +52,7 @@ export const WATCHLIST_TABLE_HEADERS = [
   { label: "Khối lượng",  align: "right" },
   { label: "RSI",         align: "left"  },
   { label: "Tín hiệu",   align: "left"  },
+  { label: "RS Score",    align: "center" },
   { label: "",            align: "left"  },
 ] as const;
 
@@ -112,4 +114,36 @@ export const COMPANY_NAMES: Readonly<Record<string, string>> = {
   DGC: "Đức Giang Chemical",
   DBC: "Dabaco",
   HAG: "HAGL",
+};
+
+// ── RS Composite Score ──────────────────────────────────────
+
+export const RS_DEFAULT_PARAMS = {
+  lookback: 252,
+  slope_window: 10,
+  correction_window: 60,
+} as const;
+
+export const RS_PARAM_BOUNDS = {
+  lookback: { min: 42, max: 504 },
+  slope_window: { min: 3, max: 30 },
+  correction_window: { min: 20, max: 126 },
+} as const;
+
+export const RS_SIGNAL_CONFIG: Readonly<
+  Record<string, { className: string; label: string; color: string }>
+> = {
+  market_leader: { className: "badge-buy", label: "Market Leader", color: "var(--bull)" },
+  outperformer: { className: "badge-hold", label: "Outperformer", color: "var(--signal-hold)" },
+  average: { className: "", label: "Average", color: "var(--muted-foreground)" },
+  laggard: { className: "badge-sell", label: "Laggard", color: "var(--bear)" },
+};
+
+/** Map lookback sessions → human-readable Vietnamese text */
+export const LOOKBACK_LABELS: Readonly<Record<number, string>> = {
+  42: "2 tháng",
+  63: "3 tháng",
+  126: "6 tháng",
+  252: "1 năm",
+  504: "2 năm",
 };

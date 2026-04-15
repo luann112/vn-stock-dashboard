@@ -1,5 +1,8 @@
-import { API_BASE_URL, COMPANY_NAMES } from "@/constants";
-import type { PriceData, SignalData, OHLCVBar, HistoryResponse } from "@/types";
+import { API_BASE_URL, COMPANY_NAMES, RS_DEFAULT_PARAMS } from "@/constants";
+import type {
+  PriceData, SignalData, OHLCVBar, HistoryResponse,
+  RSScoreData, RSScanData, RSPresetsResponse, RSParams,
+} from "@/types";
 
 // ---------------------------------------------------------------------------
 // Error class
@@ -79,7 +82,58 @@ export const api = {
   watchlist: ()                             => `${API_BASE_URL}/watchlist`,
   /** GET /health */
   health:   ()                              => `${API_BASE_URL}/health`,
+
+  // ── RS Composite Score ──────────────────────────────────────
+  /** GET /rs/{symbol}?lookback=&slope_window=&correction_window=&preset= */
+  rsScore: (symbol: string, params?: Partial<RSParams>) => {
+    const base = `${API_BASE_URL}/rs/${symbol}`;
+    const qs = _rsQueryString(params);
+    return qs ? `${base}?${qs}` : base;
+  },
+  /** GET /rs/scan?min_score=&sort_by=&limit=&... */
+  rsScan: (opts?: {
+    min_score?: number;
+    sort_by?: string;
+    limit?: number;
+  } & Partial<RSParams>) => {
+    const parts: string[] = [];
+    if (opts?.min_score !== undefined) parts.push(`min_score=${opts.min_score}`);
+    if (opts?.sort_by) parts.push(`sort_by=${opts.sort_by}`);
+    if (opts?.limit !== undefined) parts.push(`limit=${opts.limit}`);
+    const rsQs = _rsQueryString(opts);
+    if (rsQs) parts.push(rsQs);
+    const qs = parts.join("&");
+    return qs ? `${API_BASE_URL}/rs/scan?${qs}` : `${API_BASE_URL}/rs/scan`;
+  },
+  /** GET /rs/watchlist?lookback=&slope_window=&correction_window= */
+  rsWatchlist: (params?: Partial<RSParams>) => {
+    const base = `${API_BASE_URL}/rs/watchlist`;
+    const qs = _rsQueryString(params);
+    return qs ? `${base}?${qs}` : base;
+  },
+  /** GET /rs/presets */
+  rsPresets: () => `${API_BASE_URL}/rs/presets`,
 } as const;
+
+/** Build query string for RS params (only includes non-default values). */
+function _rsQueryString(params?: Partial<RSParams>): string {
+  if (!params) return "";
+  const parts: string[] = [];
+  if (params.preset) {
+    parts.push(`preset=${params.preset}`);
+  } else {
+    if (params.lookback && params.lookback !== RS_DEFAULT_PARAMS.lookback) {
+      parts.push(`lookback=${params.lookback}`);
+    }
+    if (params.slope_window && params.slope_window !== RS_DEFAULT_PARAMS.slope_window) {
+      parts.push(`slope_window=${params.slope_window}`);
+    }
+    if (params.correction_window && params.correction_window !== RS_DEFAULT_PARAMS.correction_window) {
+      parts.push(`correction_window=${params.correction_window}`);
+    }
+  }
+  return parts.join("&");
+}
 
 // ---------------------------------------------------------------------------
 // Typed fetch helpers (imperative use outside SWR)
