@@ -21,14 +21,17 @@ const PRESETS = {
   conservative: {
     name: "Thận trọng (1 năm)",
     params: { lookback: 252, slope_window: 10, correction_window: 60 },
+    tooltip: "lookback=252 · slope=10 · correction=60 — phù hợp giữ 3–6 tháng",
   },
   balanced: {
     name: "Cân bằng (6 tháng)",
     params: { lookback: 126, slope_window: 10, correction_window: 45 },
+    tooltip: "lookback=126 · slope=10 · correction=45 — khuyến nghị mặc định",
   },
   aggressive: {
     name: "Nhạy (3 tháng)",
     params: { lookback: 63, slope_window: 5, correction_window: 30 },
+    tooltip: "lookback=63 · slope=5 · correction=30 — swing trading, nhiều false signal hơn",
   },
 };
 
@@ -134,6 +137,7 @@ export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
           <button
             key={key}
             onClick={() => handlePreset(key)}
+            title={preset.tooltip}
             className={`px-3 py-2 rounded-full text-sm font-medium transition-colors ${
               currentPreset === key && !isCustom
                 ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
@@ -157,8 +161,8 @@ export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
 
       {isCustom && (
         <div className="flex flex-col gap-4">
-          <div>
-            <div className="flex justify-between items-baseline mb-2">
+          <div title="Ngắn = bắt momentum sớm, nhiều nhiễu. Dài = ổn định, chậm hơn">
+            <div className="flex justify-between items-baseline mb-1">
               <label className="text-sm font-medium text-[color:var(--foreground)]">
                 Lookback
               </label>
@@ -166,6 +170,9 @@ export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
                 {sessionsToLabel(lookback)}
               </span>
             </div>
+            <p className="text-xs text-[color:var(--muted-foreground)] mb-2">
+              Ảnh hưởng RS Rating và RS Near High
+            </p>
             <input
               type="range"
               min={RS_PARAM_BOUNDS.lookback.min}
@@ -182,13 +189,16 @@ export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
             </div>
           </div>
 
-          <div>
-            <div className="flex justify-between items-baseline mb-2">
+          <div title="Nhỏ = nhạy nhưng dễ bị nhiễu 1–2 phiên xấu. Khuyến nghị: 5–10">
+            <div className="flex justify-between items-baseline mb-1">
               <label className="text-sm font-medium text-[color:var(--foreground)]">
                 Slope Window
               </label>
               <span className="text-xs text-[color:var(--muted-foreground)]">{slopeWindow}</span>
             </div>
+            <p className="text-xs text-[color:var(--muted-foreground)] mb-2">
+              Ảnh hưởng RS Trending — slope dương/âm của RS Line
+            </p>
             <input
               type="range"
               min={RS_PARAM_BOUNDS.slope_window.min}
@@ -211,8 +221,8 @@ export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
             </div>
           </div>
 
-          <div>
-            <div className="flex justify-between items-baseline mb-2">
+          <div title="Nhỏ = phản ánh hành vi rất gần đây. Khuyến nghị: 60">
+            <div className="flex justify-between items-baseline mb-1">
               <label className="text-sm font-medium text-[color:var(--foreground)]">
                 Correction Window
               </label>
@@ -220,6 +230,9 @@ export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
                 {correctionWindow}
               </span>
             </div>
+            <p className="text-xs text-[color:var(--muted-foreground)] mb-2">
+              Ảnh hưởng RS Days — số phiên quan sát khi thị trường giảm
+            </p>
             <input
               type="range"
               min={RS_PARAM_BOUNDS.correction_window.min}

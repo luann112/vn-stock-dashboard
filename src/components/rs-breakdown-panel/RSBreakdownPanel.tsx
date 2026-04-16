@@ -1,6 +1,12 @@
 "use client";
 
-import { RS_SIGNAL_CONFIG, LOOKBACK_LABELS } from "@/constants";
+import {
+  RS_SIGNAL_CONFIG,
+  LOOKBACK_LABELS,
+  RS_RATING_THRESHOLDS,
+  RS_NEAR_HIGH_THRESHOLDS,
+  RS_DAYS_THRESHOLDS,
+} from "@/constants";
 import type { RSScoreData } from "@/types";
 import { ComponentBar } from "./ComponentBar";
 
@@ -14,13 +20,7 @@ export function RSBreakdownPanel({ data }: RSBreakdownPanelProps) {
   const signalConfig = RS_SIGNAL_CONFIG[signal] ?? fallback;
   const lookbackLabel = LOOKBACK_LABELS[params.lookback] ?? `${params.lookback} phiên`;
 
-  const scorePercentage = (score / 100) * 100;
-  let scoreColor = "var(--bear)";
-  if (scorePercentage >= 80) {
-    scoreColor = "var(--bull)";
-  } else if (scorePercentage >= 50) {
-    scoreColor = "var(--signal-hold)";
-  }
+  const scoreColor = score >= 80 ? "var(--bull)" : score >= 50 ? "var(--signal-hold)" : "var(--bear)";
 
   const binaryUp = breakdown.rs_trending_direction === "up";
 
@@ -80,7 +80,12 @@ export function RSBreakdownPanel({ data }: RSBreakdownPanelProps) {
           weight="40%"
           score={breakdown.rs_rating}
           maxScore={40}
-          subtitle="Percentile vs index"
+          description="Cổ phiếu đang outperform bao nhiêu % thị trường trong kỳ lookback?"
+          thresholds={{
+            segments: [...RS_RATING_THRESHOLDS],
+            current: breakdown.rs_rating_raw,
+          }}
+          subtitle={`Percentile ${Math.round(breakdown.rs_rating_raw)}/100`}
           extra={`${Math.round(breakdown.rs_rating)}/${40}`}
         />
 
@@ -89,8 +94,11 @@ export function RSBreakdownPanel({ data }: RSBreakdownPanelProps) {
           weight="20%"
           score={breakdown.rs_trending}
           maxScore={20}
+          description={`RS Line (giá/VN-Index) đang đi lên hay xuống trong ${params.slope_window} phiên?`}
           subtitle={binaryUp ? "▲ Đang outperform" : "▼ Đang underperform"}
+          subtitleColor={binaryUp ? "var(--bull)" : "var(--bear)"}
           extra={breakdown.rs_trending === 20 ? "20" : "0"}
+          note="Không có điểm giữa — slope dương = 20đ, slope âm = 0đ"
           isBinary
           isBinaryUp={binaryUp}
         />
@@ -100,8 +108,14 @@ export function RSBreakdownPanel({ data }: RSBreakdownPanelProps) {
           weight="20%"
           score={breakdown.rs_near_high}
           maxScore={20}
-          subtitle={`${Math.round(breakdown.rs_near_high_pct * 100)}% of 52-week high`}
+          description={`RS Line hiện tại ở bao nhiêu % so với đỉnh cao nhất trong ${lookbackLabel}?`}
+          thresholds={{
+            segments: [...RS_NEAR_HIGH_THRESHOLDS],
+            current: breakdown.rs_near_high_pct * 100,
+          }}
+          subtitle={`${Math.round(breakdown.rs_near_high_pct * 100)}% of ${lookbackLabel} high`}
           extra={`${Math.round(breakdown.rs_near_high)}/${20}`}
+          note="RS Line phá đỉnh trước giá = tín hiệu tổ chức tích lũy"
         />
 
         <ComponentBar
@@ -109,18 +123,23 @@ export function RSBreakdownPanel({ data }: RSBreakdownPanelProps) {
           weight="20%"
           score={breakdown.rs_days}
           maxScore={20}
-          subtitle={`${breakdown.rs_days_outperform} of ${breakdown.rs_days_total} days outperform`}
+          description={`Khi VN-Index giảm, cổ phiếu có giảm ít hơn không? (${params.correction_window} phiên)`}
+          thresholds={{
+            segments: [...RS_DAYS_THRESHOLDS],
+            current: breakdown.rs_days_pct * 100,
+          }}
+          subtitle={`${breakdown.rs_days_outperform}/${breakdown.rs_days_total} phiên outperform (${Math.round(breakdown.rs_days_pct * 100)}%)`}
           extra={`${Math.round(breakdown.rs_days)}/${20}`}
+          badge={{ text: "Leadership zone", show: breakdown.rs_days_pct > 0.6 }}
+          note="Ngưỡng > 60% theo IBD/O'Neil"
         />
       </div>
 
-      {/* Footer Disclaimer */}
-      <div className="text-xs text-muted-foreground">
-        <p>
-          RS Composite Score compares stock performance vs market index across 4 dimensions:
-          rating, trend, proximity to highs, and outperformance days. Higher scores indicate
-          stronger relative strength.
-        </p>
+      {/* Footer */}
+      <div className="flex flex-col gap-1 text-xs text-muted-foreground">
+        <p>Score = RS Rating (40%) + RS Trending (20%) + RS Near High (20%) + RS Days (20%)</p>
+        <p>Đây là công cụ lọc, không phải tín hiệu mua. Kết hợp với price action và market regime.</p>
+        <p>Kiểm tra: VN-Index {"> "}MA50 {"> "}MA200 trước khi hành động.</p>
       </div>
     </div>
   );

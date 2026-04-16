@@ -147,3 +147,25 @@ export const LOOKBACK_LABELS: Readonly<Record<number, string>> = {
   252: "1 năm",
   504: "2 năm",
 };
+
+/** Threshold segments for RS component bars */
+export const RS_RATING_THRESHOLDS = [
+  { max: 50, label: "< 50 Laggard" },
+  { max: 70, label: "50–69 Average" },
+  { max: 80, label: "70–79 Outperformer" },
+  { max: 90, label: "80–89 Leader" },
+  { max: 101, label: "≥ 90 Elite" },
+] as const;
+
+export const RS_NEAR_HIGH_THRESHOLDS = [
+  { max: 70, label: "< 70% Sụt mạnh" },
+  { max: 90, label: "70–90% Bình thường" },
+  { max: 95, label: "90–95% Khá tốt" },
+  { max: 101, label: "> 95% Gần đỉnh" },
+] as const;
+
+export const RS_DAYS_THRESHOLDS = [
+  { max: 40, label: "< 40% Yếu" },
+  { max: 60, label: "40–60% Trung bình" },
+  { max: 101, label: "> 60% Leadership" },
+] as const;
