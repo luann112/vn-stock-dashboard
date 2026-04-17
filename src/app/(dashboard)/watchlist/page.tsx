@@ -6,12 +6,31 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { WatchlistTable } from "@/components/watchlist-table";
 import { ChartPanel } from "@/components/chart-panel";
 import { AddSymbolDialog } from "@/components/add-symbol-dialog";
-import { REFRESH_INTERVAL } from "@/constants";
+import { REFRESH_INTERVAL, SELECTED_SYMBOL_KEY } from "@/constants";
 
 export default function WatchlistPage() {
-  const { symbols, hydrated, add, remove } = useWatchlist();
+  const { symbols, hydrated, add, remove, reorder } = useWatchlist();
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+
+  // Restore selected symbol from localStorage after hydration
+  useEffect(() => {
+    if (!hydrated || symbols.length === 0) return;
+    const saved = localStorage.getItem(SELECTED_SYMBOL_KEY);
+    if (saved && symbols.includes(saved)) {
+      setSelectedSymbol(saved);
+    } else {
+      const first = symbols[0];
+      if (first) setSelectedSymbol(first);
+    }
+  }, [hydrated, symbols.length === 0]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Persist selected symbol to localStorage
+  useEffect(() => {
+    if (selectedSymbol) {
+      localStorage.setItem(SELECTED_SYMBOL_KEY, selectedSymbol);
+    }
+  }, [selectedSymbol]);
 
   useEffect(() => {
     setLastRefresh(new Date());
@@ -19,13 +38,19 @@ export default function WatchlistPage() {
     return () => clearInterval(interval);
   }, []);
 
+  const activeSymbol = selectedSymbol ?? symbols[0] ?? null;
+
   function handleSelect(symbol: string): void {
     setSelectedSymbol((prev) => (prev === symbol ? null : symbol));
   }
 
   function handleRemove(symbol: string): void {
     remove(symbol);
-    if (selectedSymbol === symbol) setSelectedSymbol(null);
+    if (selectedSymbol === symbol) {
+      const remaining = symbols.filter((s) => s !== symbol);
+      const fallback = remaining[0] ?? null;
+      setSelectedSymbol(fallback);
+    }
   }
 
   return (
@@ -58,17 +83,24 @@ export default function WatchlistPage() {
         </div>
       </div>
 
-      <WatchlistTable
-        symbols={symbols}
-        selectedSymbol={selectedSymbol}
-        isLoading={!hydrated}
-        onSelect={handleSelect}
-        onRemove={handleRemove}
-      />
+      <div className="flex flex-col lg:flex-row gap-4 items-start">
+        <div className="w-full lg:flex-1 min-w-0">
+          <WatchlistTable
+            symbols={symbols}
+            selectedSymbol={selectedSymbol}
+            isLoading={!hydrated}
+            onSelect={handleSelect}
+            onRemove={handleRemove}
+            onReorder={reorder}
+          />
+        </div>
 
-      {selectedSymbol && (
-        <ChartPanel symbol={selectedSymbol} onClose={() => setSelectedSymbol(null)} />
-      )}
+        {activeSymbol && (
+          <div className="w-full lg:w-105 lg:shrink-0 lg:sticky lg:top-6 lg:self-start">
+            <ChartPanel symbol={activeSymbol} onClose={() => setSelectedSymbol(null)} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

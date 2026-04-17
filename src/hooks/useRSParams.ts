@@ -3,6 +3,20 @@ import { useDebouncedCallback } from "use-debounce";
 import type { RSParams } from "@/types";
 
 const RS_DEBOUNCE_MS = 600;
+const RS_PARAMS_STORAGE_KEY = "vn-stock-rs-params";
+
+function loadSavedParams(): Partial<RSParams> {
+  if (typeof window === "undefined") return {};
+  try {
+    const saved = localStorage.getItem(RS_PARAMS_STORAGE_KEY);
+    if (!saved) return {};
+    const parsed = JSON.parse(saved) as unknown;
+    if (parsed && typeof parsed === "object") return parsed as Partial<RSParams>;
+  } catch {
+    // ignore
+  }
+  return {};
+}
 
 interface UseRSParamsReturn {
   /** Params for UI display — updates immediately */
@@ -16,14 +30,16 @@ interface UseRSParamsReturn {
 }
 
 export function useRSParams(): UseRSParamsReturn {
-  const [uiParams, setUiParams] = useState<Partial<RSParams>>({});
-  const [apiParams, setApiParams] = useState<Partial<RSParams>>({});
+  const [saved] = useState(loadSavedParams);
+  const [uiParams, setUiParams] = useState<Partial<RSParams>>(saved);
+  const [apiParams, setApiParams] = useState<Partial<RSParams>>(saved);
   const [isPending, setIsPending] = useState(false);
-  const latestUiRef = useRef<Partial<RSParams>>({});
+  const latestUiRef = useRef<Partial<RSParams>>(saved);
 
   const flushToApi = useDebouncedCallback((params: Partial<RSParams>) => {
     setApiParams(params);
     setIsPending(false);
+    localStorage.setItem(RS_PARAMS_STORAGE_KEY, JSON.stringify(params));
   }, RS_DEBOUNCE_MS);
 
   const setParams = useCallback(

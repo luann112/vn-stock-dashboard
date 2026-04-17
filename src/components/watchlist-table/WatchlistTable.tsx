@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Bot } from "lucide-react";
 import { StockRow } from "@/components/stock-row";
 import { SkeletonRow } from "@/components/skeleton";
@@ -8,7 +8,6 @@ import { RSBreakdownModal } from "@/components/rs-breakdown-panel";
 import { RSParamSelector } from "@/components/rs-param-selector";
 import { useRSParams } from "@/hooks/useRSParams";
 import { WATCHLIST_TABLE_HEADERS } from "@/constants";
-import type { RSParams } from "@/types";
 
 export interface WatchlistTableProps {
   symbols: string[];
@@ -16,6 +15,7 @@ export interface WatchlistTableProps {
   isLoading?: boolean;
   onSelect: (symbol: string) => void;
   onRemove: (symbol: string) => void;
+  onReorder?: (newSymbols: string[]) => void;
 }
 
 function EmptyState() {
@@ -52,9 +52,51 @@ export function WatchlistTable({
   isLoading = false,
   onSelect,
   onRemove,
+  onReorder,
 }: WatchlistTableProps) {
   const [rsModalSymbol, setRsModalSymbol] = useState<string | null>(null);
   const { uiParams, apiParams, isPending: isRSPending, setParams: setRsParams } = useRSParams();
+  const dragIndexRef = useRef<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  function handleDragStart(index: number) {
+    return (e: React.DragEvent<HTMLTableRowElement>) => {
+      dragIndexRef.current = index;
+      e.dataTransfer.effectAllowed = "move";
+      e.currentTarget.style.opacity = "0.5";
+    };
+  }
+
+  function handleDragOver(index: number) {
+    return (e: React.DragEvent<HTMLTableRowElement>) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      setDragOverIndex(index);
+    };
+  }
+
+  function handleDragEnd(e: React.DragEvent<HTMLTableRowElement>) {
+    e.currentTarget.style.opacity = "1";
+    dragIndexRef.current = null;
+    setDragOverIndex(null);
+  }
+
+  function handleDrop(targetIndex: number) {
+    return (e: React.DragEvent<HTMLTableRowElement>) => {
+      e.preventDefault();
+      const fromIndex = dragIndexRef.current;
+      if (fromIndex === null || fromIndex === targetIndex || !onReorder) return;
+
+      const next = [...symbols];
+      const [moved] = next.splice(fromIndex, 1);
+      if (!moved) return;
+      next.splice(targetIndex, 0, moved);
+      onReorder(next);
+
+      dragIndexRef.current = null;
+      setDragOverIndex(null);
+    };
+  }
 
   const handleRSClick = useCallback((symbol: string) => {
     setRsModalSymbol((prev) => (prev === symbol ? null : symbol));
@@ -90,19 +132,22 @@ export function WatchlistTable({
           ) : symbols.length === 0 ? (
             <EmptyState />
           ) : (
-            symbols.map((symbol) => (
-              <>
+            symbols.map((symbol, index) => (
                 <StockRow
                   key={symbol}
                   symbol={symbol}
                   isSelected={selectedSymbol === symbol}
                   rsParams={apiParams}
                   isRSPending={isRSPending}
+                  isDragOver={dragOverIndex === index}
                   onSelect={() => onSelect(symbol)}
                   onRemove={() => onRemove(symbol)}
                   onRSClick={handleRSClick}
+                  onDragStart={handleDragStart(index)}
+                  onDragOver={handleDragOver(index)}
+                  onDragEnd={handleDragEnd}
+                  onDrop={handleDrop(index)}
                 />
-              </>
             ))
           )}
         </tbody>

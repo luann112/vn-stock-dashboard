@@ -8,6 +8,7 @@ export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "https://vn-stock-api.railway.app";
 
 export const WATCHLIST_STORAGE_KEY = "vn-stock-watchlist";
+export const SELECTED_SYMBOL_KEY = "vn-stock-selected-symbol";
 
 export const DEFAULT_SYMBOLS = [
   "VNM", "VIC", "HPG", "TCB", "VCB", "FPT", "MWG", "MSN",

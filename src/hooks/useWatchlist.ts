@@ -11,6 +11,7 @@ interface UseWatchlistReturn {
   hydrated: boolean;
   add: (symbol: string) => void;
   remove: (symbol: string) => void;
+  reorder: (newSymbols: string[]) => void;
 }
 
 export function useWatchlist(): UseWatchlistReturn {
@@ -43,5 +44,9 @@ export function useWatchlist(): UseWatchlistReturn {
     save(symbols.filter((s) => s !== symbol));
   }
 
-  return { symbols, hydrated, add, remove };
+  function reorder(newSymbols: string[]): void {
+    save(newSymbols);
+  }
+
+  return { symbols, hydrated, add, remove, reorder };
 }

@@ -23,7 +23,7 @@ export function ChartPanel({ symbol, onClose }: ChartPanelProps) {
 
   return (
     <div
-      className="rounded-xl border mt-4 overflow-hidden card-glass"
+      className="rounded-xl border overflow-hidden card-glass"
       style={{ borderColor: "var(--border)" }}
     >
       {/* Header */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronRight, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, GripVertical, Trash2 } from "lucide-react";
 import { usePrice } from "@/hooks/usePrice";
 import { useSignal } from "@/hooks/useSignal";
 import { useRSScore } from "@/hooks/useRSScore";
@@ -16,13 +16,19 @@ export interface StockRowProps {
   isSelected: boolean;
   rsParams?: Partial<RSParams>;
   isRSPending?: boolean;
+  isDragOver?: boolean;
   onSelect: () => void;
   onRemove: () => void;
   onRSClick?: (symbol: string) => void;
+  onDragStart?: (e: React.DragEvent<HTMLTableRowElement>) => void;
+  onDragOver?: (e: React.DragEvent<HTMLTableRowElement>) => void;
+  onDragEnd?: (e: React.DragEvent<HTMLTableRowElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLTableRowElement>) => void;
 }
 
 export function StockRow({
-  symbol, isSelected, rsParams, isRSPending = false, onSelect, onRemove, onRSClick,
+  symbol, isSelected, rsParams, isRSPending = false, isDragOver = false,
+  onSelect, onRemove, onRSClick, onDragStart, onDragOver, onDragEnd, onDrop,
 }: StockRowProps) {
   const { data: price } = usePrice(symbol);
   const { data: signal } = useSignal(symbol);
@@ -45,14 +51,29 @@ export function StockRow({
 
   return (
     <tr
+      draggable
       onClick={onSelect}
       className="cursor-pointer transition-colors"
-      style={{ background: isSelected ? "var(--accent)" : "transparent" }}
+      style={{
+        background: isSelected ? "var(--accent)" : "transparent",
+        borderTop: isDragOver ? "2px solid var(--primary)" : undefined,
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
+      onDrop={onDrop}
     >
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
+          <span
+            className="cursor-grab active:cursor-grabbing"
+            style={{ color: "var(--muted-foreground)" }}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <GripVertical size={14} />
+          </span>
           <span style={{ color: "var(--muted-foreground)", width: 12 }}>
             {isSelected ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
           </span>
