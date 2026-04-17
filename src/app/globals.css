@@ -246,6 +246,12 @@
     border-color: var(--border);
   }
 
+  button,
+  [role="button"],
+  summary {
+    cursor: pointer;
+  }
+
   body {
     background: transparent; /* gradient lives on html */
     color: var(--foreground);
