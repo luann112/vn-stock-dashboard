@@ -1,5 +1,7 @@
 "use client";
 
+import { RSComponentTooltip } from "./RSComponentTooltip";
+
 export interface ThresholdSegment {
   max: number;
   label: string;
@@ -15,10 +17,12 @@ interface ComponentBarProps {
   extra?: string;
   description?: string;
   thresholds?: { segments: ThresholdSegment[]; current: number };
+  formula?: string;
   note?: string;
   badge?: { text: string; show: boolean };
   isBinary?: boolean;
   isBinaryUp?: boolean;
+  tooltipContent?: string;
 }
 
 function thresholdColor(current: number, segments: ThresholdSegment[]): string {
@@ -43,10 +47,12 @@ export function ComponentBar({
   extra,
   description,
   thresholds,
+  formula,
   note,
   badge,
   isBinary = false,
   isBinaryUp = false,
+  tooltipContent,
 }: ComponentBarProps) {
   const percentage = isBinary ? (isBinaryUp ? 100 : 0) : (score / maxScore) * 100;
 
@@ -62,7 +68,10 @@ export function ComponentBar({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-foreground">{label}</span>
+        <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+          {label}
+          {tooltipContent && <RSComponentTooltip content={tooltipContent} />}
+        </span>
         <span className="text-xs text-muted-foreground">{weight}</span>
       </div>
 
@@ -76,6 +85,7 @@ export function ComponentBar({
         className="h-2 rounded-full"
         style={{
           background: barGradient,
+          border: "1px solid var(--border)",
         }}
       />
 
@@ -126,6 +136,15 @@ export function ComponentBar({
           {extra && <span className="text-xs font-semibold text-foreground">{extra}</span>}
         </div>
       </div>
+
+      {formula && (
+        <p
+          className="font-mono text-muted-foreground"
+          style={{ fontSize: "11px", lineHeight: "16px", marginTop: "-2px" }}
+        >
+          {formula}
+        </p>
+      )}
 
       {note && (
         <p

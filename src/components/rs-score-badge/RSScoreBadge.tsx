@@ -5,6 +5,7 @@ export interface RSScoreBadgeProps {
   score: number;
   signal: RSSignal;
   isTrendingUp: boolean;
+  isPending?: boolean;
   onClick?: () => void;
 }
 
@@ -12,6 +13,7 @@ export function RSScoreBadge({
   score,
   signal,
   isTrendingUp,
+  isPending = false,
   onClick,
 }: RSScoreBadgeProps) {
   const config = RS_SIGNAL_CONFIG[signal];
@@ -20,11 +22,12 @@ export function RSScoreBadge({
   const arrow = isTrendingUp ? "↑" : "↓";
   const cursorClass = onClick ? "cursor-pointer" : "";
   const hoverClass = onClick ? "hover:opacity-80 transition-opacity" : "";
+  const pendingClass = isPending ? "animate-pulse opacity-50" : "";
 
   return (
     <div
       onClick={onClick}
-      className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-medium ${cursorClass} ${hoverClass}`}
+      className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-medium ${cursorClass} ${hoverClass} ${pendingClass}`}
       style={{
         color: colorVar,
         backgroundColor: "var(--muted)",

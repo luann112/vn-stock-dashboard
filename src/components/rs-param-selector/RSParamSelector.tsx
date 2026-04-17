@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { RS_DEFAULT_PARAMS, RS_PARAM_BOUNDS } from "@/constants";
+import { RS_DEFAULT_PARAMS } from "@/constants";
 import type { RSParams } from "@/types";
+import { ParamCustomModal } from "./ParamCustomModal";
+import { ParamHelpModal } from "./ParamHelpModal";
 
 export interface RSParamSelectorProps {
   value: Partial<RSParams>;
@@ -36,12 +38,17 @@ const PRESETS = {
 };
 
 function detectPreset(params: Partial<RSParams>): string | null {
+  const resolved = {
+    lookback: params.lookback ?? RS_DEFAULT_PARAMS.lookback,
+    slope_window: params.slope_window ?? RS_DEFAULT_PARAMS.slope_window,
+    correction_window: params.correction_window ?? RS_DEFAULT_PARAMS.correction_window,
+  };
   for (const [key, preset] of Object.entries(PRESETS)) {
     const p = preset.params;
     if (
-      params.lookback === p.lookback &&
-      params.slope_window === p.slope_window &&
-      params.correction_window === p.correction_window
+      resolved.lookback === p.lookback &&
+      resolved.slope_window === p.slope_window &&
+      resolved.correction_window === p.correction_window
     ) {
       return key;
     }
@@ -51,66 +58,45 @@ function detectPreset(params: Partial<RSParams>): string | null {
 
 export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isCustom, setIsCustom] = useState(false);
+  const [showCustom, setShowCustom] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const lookback = value.lookback ?? RS_DEFAULT_PARAMS.lookback;
   const slopeWindow = value.slope_window ?? RS_DEFAULT_PARAMS.slope_window;
   const correctionWindow = value.correction_window ?? RS_DEFAULT_PARAMS.correction_window;
 
   const currentPreset = detectPreset(value);
-  const presetName =
-    currentPreset && !isCustom
-      ? PRESETS[currentPreset as keyof typeof PRESETS]?.name ?? "Tuỳ chỉnh"
-      : "Tuỳ chỉnh";
+  const isCustom = currentPreset === null;
+  const presetName = isCustom
+    ? "Tuỳ chỉnh"
+    : PRESETS[currentPreset as keyof typeof PRESETS]?.name ?? "Tuỳ chỉnh";
 
   const isInvalid = slopeWindow > lookback || correctionWindow > lookback;
 
   const handlePreset = (presetKey: string) => {
     const preset = PRESETS[presetKey as keyof typeof PRESETS];
     if (preset) {
-      onChange({
-        ...preset.params,
-        preset: presetKey,
-      });
-      setIsCustom(false);
+      onChange({ ...preset.params, preset: presetKey });
     }
   };
 
-  const handleLookback = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseInt(e.target.value, 10);
-    onChange({ lookback: val });
-    setIsCustom(true);
-  };
-
-  const handleSlopeWindow = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseInt(e.target.value, 10);
-    onChange({ slope_window: val });
-    setIsCustom(true);
-  };
-
-  const handleCorrectionWindow = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseInt(e.target.value, 10);
-    onChange({ correction_window: val });
-    setIsCustom(true);
+  const handleSlider = (key: keyof RSParams) => (val: number) => {
+    onChange({ [key]: val });
   };
 
   if (!isExpanded) {
     return (
-      <div className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-[color:var(--muted)]">
-        <span className="text-sm text-[color:var(--muted-foreground)]">{presetName}</span>
+      <div className="inline-flex items-center gap-2 rounded-md px-3 py-2 bg-[color:var(--muted)]">
+        <span className="text-sm text-[color:var(--muted-foreground)]">
+          {presetName}
+          <span className="ml-1 opacity-60">· {lookback}/{slopeWindow}/{correctionWindow}</span>
+        </span>
         <button
           onClick={() => setIsExpanded(true)}
-          className="p-1 hover:bg-[color:var(--input-border)] rounded transition-colors"
+          className="rounded p-1 transition-colors hover:bg-[color:var(--input-border)]"
           title="Mở rộng"
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="1" />
             <circle cx="19" cy="12" r="1" />
             <circle cx="5" cy="12" r="1" />
@@ -121,141 +107,78 @@ export function RSParamSelector({ value, onChange }: RSParamSelectorProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4 rounded-lg bg-[color:var(--card)] border border-[color:var(--border)]">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-[color:var(--foreground)]">RS Params</h3>
-        <button
-          onClick={() => setIsExpanded(false)}
-          className="text-xs text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)] transition-colors"
-        >
-          Đóng
-        </button>
-      </div>
-
-      <div className="flex gap-2">
-        {Object.entries(PRESETS).map(([key, preset]) => (
+    <>
+      <div className="flex flex-col gap-3 rounded-lg border p-4 bg-[color:var(--card)] border-[color:var(--border)]">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-[color:var(--foreground)]">RS Params</h3>
           <button
-            key={key}
-            onClick={() => handlePreset(key)}
-            title={preset.tooltip}
-            className={`px-3 py-2 rounded-full text-sm font-medium transition-colors ${
-              currentPreset === key && !isCustom
+            onClick={() => setIsExpanded(false)}
+            className="text-xs transition-colors text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)]"
+          >
+            Đóng
+          </button>
+        </div>
+
+        {/* Presets + Tuỳ chỉnh button */}
+        <div className="flex flex-wrap items-center gap-2">
+          {Object.entries(PRESETS).map(([key, preset]) => (
+            <button
+              key={key}
+              onClick={() => handlePreset(key)}
+              title={preset.tooltip}
+              className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                currentPreset === key
+                  ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
+                  : "bg-[color:var(--muted)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--input-border)]"
+              }`}
+            >
+              {preset.name}
+            </button>
+          ))}
+          <button
+            onClick={() => setShowCustom(true)}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+              isCustom
                 ? "bg-[color:var(--primary)] text-[color:var(--primary-foreground)]"
                 : "bg-[color:var(--muted)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--input-border)]"
             }`}
           >
-            {preset.name}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            Tuỳ chỉnh
           </button>
-        ))}
+        </div>
+
+        {/* Params summary + help button */}
+        <div className="flex items-center gap-2">
+          <p className="text-xs text-[color:var(--muted-foreground)]">
+            Đang dùng: lookback={lookback} · slope={slopeWindow} · correction={correctionWindow}
+          </p>
+          <button
+            onClick={() => setShowHelp(true)}
+            title="Giải thích tham số"
+            className="flex h-5 w-5 flex-none items-center justify-center rounded-full text-xs font-semibold transition-colors bg-[color:var(--muted)] text-[color:var(--muted-foreground)] hover:bg-[color:var(--input-border)]"
+          >
+            ?
+          </button>
+        </div>
       </div>
 
-      <label className="flex items-center gap-3 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={isCustom}
-          onChange={(e) => setIsCustom(e.target.checked)}
-          className="w-4 h-4"
+      {showCustom && (
+        <ParamCustomModal
+          lookback={lookback}
+          slopeWindow={slopeWindow}
+          correctionWindow={correctionWindow}
+          isInvalid={isInvalid}
+          onChange={handleSlider}
+          sessionsToLabel={sessionsToLabel}
+          onClose={() => setShowCustom(false)}
         />
-        <span className="text-sm text-[color:var(--foreground)]">Tuỳ chỉnh</span>
-      </label>
-
-      {isCustom && (
-        <div className="flex flex-col gap-4">
-          <div title="Ngắn = bắt momentum sớm, nhiều nhiễu. Dài = ổn định, chậm hơn">
-            <div className="flex justify-between items-baseline mb-1">
-              <label className="text-sm font-medium text-[color:var(--foreground)]">
-                Lookback
-              </label>
-              <span className="text-xs text-[color:var(--muted-foreground)]">
-                {sessionsToLabel(lookback)}
-              </span>
-            </div>
-            <p className="text-xs text-[color:var(--muted-foreground)] mb-2">
-              Ảnh hưởng RS Rating và RS Near High
-            </p>
-            <input
-              type="range"
-              min={RS_PARAM_BOUNDS.lookback.min}
-              max={RS_PARAM_BOUNDS.lookback.max}
-              value={lookback}
-              onChange={handleLookback}
-              style={{
-                accentColor: isInvalid ? "var(--bear)" : "var(--primary)",
-              }}
-              className="w-full"
-            />
-            <div className="text-xs text-[color:var(--muted-foreground)] mt-1">
-              {RS_PARAM_BOUNDS.lookback.min} – {RS_PARAM_BOUNDS.lookback.max}
-            </div>
-          </div>
-
-          <div title="Nhỏ = nhạy nhưng dễ bị nhiễu 1–2 phiên xấu. Khuyến nghị: 5–10">
-            <div className="flex justify-between items-baseline mb-1">
-              <label className="text-sm font-medium text-[color:var(--foreground)]">
-                Slope Window
-              </label>
-              <span className="text-xs text-[color:var(--muted-foreground)]">{slopeWindow}</span>
-            </div>
-            <p className="text-xs text-[color:var(--muted-foreground)] mb-2">
-              Ảnh hưởng RS Trending — slope dương/âm của RS Line
-            </p>
-            <input
-              type="range"
-              min={RS_PARAM_BOUNDS.slope_window.min}
-              max={RS_PARAM_BOUNDS.slope_window.max}
-              value={slopeWindow}
-              onChange={handleSlopeWindow}
-              disabled={isInvalid}
-              style={{
-                accentColor: isInvalid ? "var(--bear)" : "var(--primary)",
-              }}
-              className="w-full disabled:opacity-50"
-            />
-            <div className="text-xs text-[color:var(--muted-foreground)] mt-1">
-              {RS_PARAM_BOUNDS.slope_window.min} – {RS_PARAM_BOUNDS.slope_window.max}
-              {isInvalid && (
-                <span className="text-[color:var(--bear)] ml-2">
-                  (phải {String.fromCharCode(8804)} Lookback)
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div title="Nhỏ = phản ánh hành vi rất gần đây. Khuyến nghị: 60">
-            <div className="flex justify-between items-baseline mb-1">
-              <label className="text-sm font-medium text-[color:var(--foreground)]">
-                Correction Window
-              </label>
-              <span className="text-xs text-[color:var(--muted-foreground)]">
-                {correctionWindow}
-              </span>
-            </div>
-            <p className="text-xs text-[color:var(--muted-foreground)] mb-2">
-              Ảnh hưởng RS Days — số phiên quan sát khi thị trường giảm
-            </p>
-            <input
-              type="range"
-              min={RS_PARAM_BOUNDS.correction_window.min}
-              max={RS_PARAM_BOUNDS.correction_window.max}
-              value={correctionWindow}
-              onChange={handleCorrectionWindow}
-              disabled={isInvalid}
-              style={{
-                accentColor: isInvalid ? "var(--bear)" : "var(--primary)",
-              }}
-              className="w-full disabled:opacity-50"
-            />
-            <div className="text-xs text-[color:var(--muted-foreground)] mt-1">
-              {RS_PARAM_BOUNDS.correction_window.min} – {RS_PARAM_BOUNDS.correction_window.max}
-              {isInvalid && (
-                <span className="text-[color:var(--bear)] ml-2">
-                  (phải {String.fromCharCode(8804)} Lookback)
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
       )}
-    </div>
+
+      {showHelp && <ParamHelpModal onClose={() => setShowHelp(false)} />}
+    </>
   );
 }

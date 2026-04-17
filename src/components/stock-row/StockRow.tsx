@@ -15,13 +15,14 @@ export interface StockRowProps {
   symbol: string;
   isSelected: boolean;
   rsParams?: Partial<RSParams>;
+  isRSPending?: boolean;
   onSelect: () => void;
   onRemove: () => void;
   onRSClick?: (symbol: string) => void;
 }
 
 export function StockRow({
-  symbol, isSelected, rsParams, onSelect, onRemove, onRSClick,
+  symbol, isSelected, rsParams, isRSPending = false, onSelect, onRemove, onRSClick,
 }: StockRowProps) {
   const { data: price } = usePrice(symbol);
   const { data: signal } = useSignal(symbol);
@@ -105,6 +106,7 @@ export function StockRow({
             score={rsScore.score}
             signal={rsScore.signal}
             isTrendingUp={rsScore.breakdown.rs_trending_direction === "up"}
+            isPending={isRSPending}
             onClick={onRSClick ? () => onRSClick(symbol) : undefined}
           />
         ) : (

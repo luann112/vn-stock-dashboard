@@ -4,11 +4,11 @@ import { useState, useCallback } from "react";
 import { Bot } from "lucide-react";
 import { StockRow } from "@/components/stock-row";
 import { SkeletonRow } from "@/components/skeleton";
-import { RSBreakdownPanel } from "@/components/rs-breakdown-panel";
+import { RSBreakdownModal } from "@/components/rs-breakdown-panel";
 import { RSParamSelector } from "@/components/rs-param-selector";
-import { useRSScore } from "@/hooks/useRSScore";
+import { useRSParams } from "@/hooks/useRSParams";
 import { WATCHLIST_TABLE_HEADERS } from "@/constants";
-import type { RSParams, RSScoreData } from "@/types";
+import type { RSParams } from "@/types";
 
 export interface WatchlistTableProps {
   symbols: string[];
@@ -16,19 +16,6 @@ export interface WatchlistTableProps {
   isLoading?: boolean;
   onSelect: (symbol: string) => void;
   onRemove: (symbol: string) => void;
-}
-
-/** Fetches + renders RS breakdown inline below a table row. */
-function RSExpandedRow({ symbol, rsParams }: { symbol: string; rsParams?: Partial<RSParams> }) {
-  const { data } = useRSScore(symbol, rsParams);
-  if (!data) return null;
-  return (
-    <tr>
-      <td colSpan={8} className="px-4 py-3" style={{ background: "var(--muted)" }}>
-        <RSBreakdownPanel data={data} />
-      </td>
-    </tr>
-  );
 }
 
 function EmptyState() {
@@ -66,11 +53,11 @@ export function WatchlistTable({
   onSelect,
   onRemove,
 }: WatchlistTableProps) {
-  const [rsExpandedSymbol, setRsExpandedSymbol] = useState<string | null>(null);
-  const [rsParams, setRsParams] = useState<Partial<RSParams>>({});
+  const [rsModalSymbol, setRsModalSymbol] = useState<string | null>(null);
+  const { uiParams, apiParams, isPending: isRSPending, setParams: setRsParams } = useRSParams();
 
   const handleRSClick = useCallback((symbol: string) => {
-    setRsExpandedSymbol((prev) => (prev === symbol ? null : symbol));
+    setRsModalSymbol((prev) => (prev === symbol ? null : symbol));
   }, []);
 
   return (
@@ -80,7 +67,7 @@ export function WatchlistTable({
     >
       {/* RS Param Selector — shared for all rows */}
       <div className="px-4 py-2" style={{ borderBottom: "1px solid var(--border)" }}>
-        <RSParamSelector value={rsParams} onChange={setRsParams} />
+        <RSParamSelector value={uiParams} onChange={setRsParams} />
       </div>
 
       <table className="w-full text-sm">
@@ -109,23 +96,25 @@ export function WatchlistTable({
                   key={symbol}
                   symbol={symbol}
                   isSelected={selectedSymbol === symbol}
-                  rsParams={rsParams}
+                  rsParams={apiParams}
+                  isRSPending={isRSPending}
                   onSelect={() => onSelect(symbol)}
                   onRemove={() => onRemove(symbol)}
                   onRSClick={handleRSClick}
                 />
-                {rsExpandedSymbol === symbol && (
-                  <RSExpandedRow
-                    key={`rs-${symbol}`}
-                    symbol={symbol}
-                    rsParams={rsParams}
-                  />
-                )}
               </>
             ))
           )}
         </tbody>
       </table>
+
+      {rsModalSymbol && (
+        <RSBreakdownModal
+          symbol={rsModalSymbol}
+          rsParams={apiParams}
+          onClose={() => setRsModalSymbol(null)}
+        />
+      )}
     </div>
   );
 }
