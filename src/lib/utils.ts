@@ -6,10 +6,7 @@ export function cn(...inputs: ClassValue[]): string {
 }
 
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat("vi-VN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(price);
+  return (price / 1000).toFixed(2);
 }
 
 export function formatVolume(volume: number): string {
