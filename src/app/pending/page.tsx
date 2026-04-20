@@ -60,12 +60,12 @@ export default function PendingPage() {
   return (
     <div className="flex h-screen items-center justify-center p-6">
       <div
-        className="w-full max-w-sm rounded-2xl border p-8 text-center card-glass"
+        className="w-full max-w-sm rounded-2xl border p-8 text-center card-surface"
         style={{ borderColor: "var(--border)" }}
       >
         <div
           className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6"
-          style={{ background: "color-mix(in srgb, var(--signal-hold) 15%, transparent)" }}
+          style={{ background: "var(--signal-hold-muted)" }}
         >
           <Clock size={28} style={{ color: "var(--signal-hold)" }} />
         </div>

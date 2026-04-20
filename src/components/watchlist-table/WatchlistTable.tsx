@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { Bot } from "lucide-react";
 import { StockRow } from "@/components/stock-row";
 import { SkeletonRow } from "@/components/skeleton";
 import { RSBreakdownModal } from "@/components/rs-breakdown-panel";
 import { RSParamSelector } from "@/components/rs-param-selector";
 import { useRSParams } from "@/hooks/useRSParams";
 import { WATCHLIST_TABLE_HEADERS } from "@/constants";
+import { EmptyState } from "./EmptyState";
 
 export interface WatchlistTableProps {
   symbols: string[];
@@ -16,34 +16,6 @@ export interface WatchlistTableProps {
   onSelect: (symbol: string) => void;
   onRemove: (symbol: string) => void;
   onReorder?: (newSymbols: string[]) => void;
-}
-
-function EmptyState() {
-  return (
-    <tr>
-      <td colSpan={7} className="px-4 py-16 text-center">
-        <div className="flex flex-col items-center gap-3">
-          <div
-            className="w-12 h-12 rounded-full flex items-center justify-center"
-            style={{ background: "var(--muted)" }}
-          >
-            <Bot size={24} style={{ color: "var(--muted-foreground)" }} />
-          </div>
-          <div>
-            <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
-              Danh mục trống
-            </p>
-            <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
-              Thêm mã bằng nút &ldquo;Thêm mã&rdquo; bên trên,
-            </p>
-            <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-              hoặc gửi lệnh <code className="font-mono">/watchlist</code> cho Telegram bot.
-            </p>
-          </div>
-        </div>
-      </td>
-    </tr>
-  );
 }
 
 export function WatchlistTable({
@@ -104,7 +76,7 @@ export function WatchlistTable({
 
   return (
     <div
-      className="rounded-xl border overflow-hidden card-glass"
+      className="rounded-xl border overflow-hidden card-surface"
       style={{ borderColor: "var(--border)" }}
     >
       {/* RS Param Selector — shared for all rows */}

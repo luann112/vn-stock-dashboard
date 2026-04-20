@@ -31,7 +31,7 @@ export function AddSymbolDialog({ onAdd, existing }: AddSymbolDialogProps) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
         style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
       >
         <Plus size={16} />
@@ -45,12 +45,16 @@ export function AddSymbolDialog({ onAdd, existing }: AddSymbolDialogProps) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ background: "rgba(0,0,0,0.4)" }}
+      style={{ background: "rgba(0,0,0,0.5)" }}
       onClick={() => setOpen(false)}
     >
       <div
-        className="rounded-xl shadow-2xl w-96 p-6"
-        style={{ background: "var(--background)", border: "1px solid var(--border)" }}
+        className="rounded-xl w-96 p-6"
+        style={{
+          background: "var(--card)",
+          border: "1px solid var(--border)",
+          boxShadow: "var(--shadow-lg)",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">

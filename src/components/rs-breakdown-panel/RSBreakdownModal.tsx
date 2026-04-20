@@ -35,7 +35,7 @@ export function RSBreakdownModal({ symbol, rsParams, onClose }: RSBreakdownModal
       ref={backdropRef}
       onClick={handleBackdrop}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
     >
       <div
         className="flex w-full max-w-lg max-h-[85vh] flex-col rounded-2xl border shadow-lg overflow-hidden"

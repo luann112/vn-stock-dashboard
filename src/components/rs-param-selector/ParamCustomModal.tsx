@@ -43,7 +43,7 @@ export function ParamCustomModal({
       ref={backdropRef}
       onClick={handleBackdrop}
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
     >
       <div
         className="flex w-full max-w-md flex-col gap-5 rounded-2xl border p-6 shadow-lg"
@@ -104,7 +104,7 @@ export function ParamCustomModal({
 
         <button
           onClick={onClose}
-          className="btn-primary w-full rounded-lg py-2.5 text-sm font-medium"
+          className="btn-primary w-full rounded-lg py-3"
         >
           Áp dụng
         </button>

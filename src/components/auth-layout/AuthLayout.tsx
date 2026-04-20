@@ -11,7 +11,7 @@ export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProp
   return (
     <div className="flex h-screen items-center justify-center p-6">
       <div
-        className="w-full max-w-sm rounded-2xl border p-8 card-glass"
+        className="w-full max-w-sm rounded-2xl border p-8 card-surface"
         style={{ borderColor: "var(--border)" }}
       >
         <div className="flex items-center gap-2 mb-8">

@@ -27,7 +27,7 @@ export function RSScoreBadge({
   return (
     <div
       onClick={onClick}
-      className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-medium ${cursorClass} ${hoverClass} ${pendingClass}`}
+      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-sm font-medium ${cursorClass} ${hoverClass} ${pendingClass}`}
       style={{
         color: colorVar,
         backgroundColor: "var(--muted)",

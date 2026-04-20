@@ -127,7 +127,6 @@ export function RSComponentTooltip({ content }: RSComponentTooltipProps) {
             backgroundColor: "var(--card)",
             borderColor: "var(--border)",
             color: "var(--foreground)",
-            backdropFilter: "blur(16px)",
           }}
         >
           <button

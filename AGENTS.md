@@ -65,12 +65,20 @@ This project uses **Tailwind CSS v4** — the config model is completely differe
 - Theme tokens go in `@theme inline {}` in `globals.css` — `tailwind.config.ts` is legacy/unused for tokens.
 - External font `@import url()` must come **before** `@import "tailwindcss"`, or use `<link>` in `layout.tsx`.
 
+### Design system: TailAdmin v3
+- **Font**: Outfit (sans) + IBM Plex Mono (numeric). Not Inter.
+- **Style**: Clean solid surfaces, no glassmorphism / backdrop-filter / gradient mesh.
+- **Shadows**: Use `--shadow-xs` through `--shadow-xl` (TailAdmin scale), not custom blue-tinted shadows.
+- **Cards**: Use `.card-surface` or `.card-glass` (legacy alias). Solid white bg + `shadow-sm`.
+- **Gray scale**: TailAdmin palette `--gray-25` through `--gray-950`.
+
 ### Color tokens
-- Never hardcode hex colors in JSX (`style={{ color: "#059669" }}` is forbidden).
+- Never hardcode hex colors in JSX (`style={{ color: "#12b76a" }}` is forbidden).
 - Always use CSS variables: `style={{ color: "var(--bull)" }}`.
-- Stock semantic colors: `--bull` (buy/positive), `--bear` (sell/negative), `--signal-hold`.
+- Primary: `--primary` = `#465fff` (TailAdmin brand-500). Not blue-500.
+- Stock semantic: `--bull` (#12b76a), `--bear` (#f04438), `--signal-hold` (#f79009).
 - Muted variants: `--bull-muted`, `--bear-muted` for badge backgrounds.
-- Old tokens `--color-buy`, `--color-sell`, `--sidebar-bg`, `--table-header-bg` **no longer exist**.
+- Old tokens `--color-buy`, `--color-sell`, `--sidebar-bg`, `--table-header-bg`, `--glass-blur`, `--glass-shadow`, `--glass-border` **no longer exist**.
 - All CSS variables are defined in `src/app/globals.css` with dark-mode overrides in `.dark {}`.
 
 ---
@@ -101,7 +109,10 @@ const { data } = useSWR<PriceData>(api.price(symbol), fetcher, {
 | `any` type | Replace with generic or `unknown` + narrowing |
 | `arr[i].prop` without guard | `const x = arr[i]; if (!x) continue;` |
 | Hex color in `style={{}}` | Use CSS variable: `var(--bull)`, `var(--bear)`, etc. |
-| Old token name `--color-buy` / `--sidebar-bg` | Use `--bull` / `--card` — old tokens don't exist |
+| Old token name `--color-buy` / `--sidebar-bg` / `--glass-*` | Use `--bull` / `--card` / `--ta-shadow-sm` — old tokens don't exist |
+| Removed class `.card-glass` / `.glass-sidebar` / `.card-terminal` | Use `.card-surface` / `.sidebar-surface` — legacy aliases removed |
+| `backdrop-filter` or glassmorphism styles | Use solid surfaces with `shadow-sm` — no glass effects |
+| Using `Inter` font | Use `Outfit` — Inter has been replaced |
 | Constant defined inside component | Move to `src/constants/index.ts` |
 | File over 150 lines | Split into sub-component or helper file |
 | Missing `index.ts` in component folder | Add barrel export |

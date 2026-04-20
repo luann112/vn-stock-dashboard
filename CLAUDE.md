@@ -139,36 +139,44 @@ Dark mode is toggled by adding class `dark` to `<html>`. Controlled by `next-the
 
 ## CSS & design tokens
 
+Design system: **TailAdmin v3** — clean solid surfaces, no glassmorphism.
+Font: **Outfit** (sans) + **IBM Plex Mono** (numeric).
 All colors come from CSS custom properties defined in `src/app/globals.css`. **Never hardcode hex values in JSX.**
 
 ```css
 /* ── Core UI ── */
---background          /* page bg — #f8faff light */
---foreground          /* body text */
---card                /* glass card bg — rgba(255,255,255,0.72) */
---border              /* dividers — rgba(59,130,246,0.14) */
---muted               /* subtle bg areas */
---muted-foreground    /* secondary text */
---primary             /* blue-500 #3b82f6 */
---primary-foreground  /* text on primary */
---input               /* form input bg */
---input-border        /* form input border */
+--background          /* page bg — gray-50 #f9fafb */
+--foreground          /* body text — gray-900 #101828 */
+--card                /* solid white #ffffff */
+--border              /* gray-200 #e4e7ec */
+--muted               /* gray-100 #f2f4f7 */
+--muted-foreground    /* gray-500 #667085 */
+--primary             /* brand-500 #465fff */
+--primary-foreground  /* white */
+--input               /* white */
+--input-border        /* gray-300 #d0d5dd */
 
 /* ── Stock semantic ── */
---bull                /* #059669 — positive / BUY */
---bull-muted          /* rgba(5,150,105,0.10) — subtle bg */
---bull-foreground     /* #065f46 — text on muted bg */
---bear                /* #dc2626 — negative / SELL */
---bear-muted          /* rgba(220,38,38,0.10) */
---bear-foreground     /* #7f1d1d */
+--bull                /* success-500 #12b76a — positive / BUY */
+--bull-muted          /* rgba(18,183,106,0.10) — subtle bg */
+--bull-foreground     /* success-950 #054f31 */
+--bear                /* error-500 #f04438 — negative / SELL */
+--bear-muted          /* rgba(240,68,56,0.10) */
+--bear-foreground     /* error-900 #7a271a */
 --signal-buy          /* = --bull */
 --signal-sell         /* = --bear */
---signal-hold         /* #d97706 — amber-600 */
+--signal-hold         /* warning-500 #f79009 */
 
-/* ── Glassmorphism helpers ── */
---glass-blur          /* 16px */
---glass-shadow        /* box-shadow for glass cards */
---glass-border        /* rgba(255,255,255,0.60) */
+/* ── TailAdmin Shadow system ── */
+--shadow-xs           /* 0px 1px 2px — subtle */
+--shadow-sm           /* default card shadow */
+--shadow-md           /* elevated elements */
+--shadow-lg           /* modals, dropdowns */
+--shadow-xl           /* overlays */
+--shadow-focus-ring   /* focus state ring */
+
+/* ── Gray scale (TailAdmin) ── */
+--gray-25 … --gray-950
 
 /* ── Chart palette ── */
 --chart-1 … --chart-10
@@ -177,14 +185,16 @@ All colors come from CSS custom properties defined in `src/app/globals.css`. **N
 ### Utility classes (defined in globals.css `@layer utilities`)
 
 ```css
-.card-glass    /* white/72% glass card — use on table, chart panel wrappers */
-.glass-sidebar /* sidebar glassmorphism */
-.glass-panel   /* lighter glass panel */
-.btn-primary   /* primary button with hover/focus states */
-.badge-buy / .badge-sell / .badge-hold  /* signal badges */
+.card-surface    /* solid white card with shadow-sm + border */
+.sidebar-surface /* solid sidebar with shadow-xs + border-right */
+.btn-primary     /* primary button: brand-500, font-medium, shadow-xs, rounded-lg */
+.btn-outline     /* outline button: white bg, gray-300 ring, font-medium */
+.badge-buy / .badge-sell / .badge-hold  /* signal badges — rounded-full */
 ```
 
-Use `style={{ color: "var(--bull)" }}` not `style={{ color: "#059669" }}`.
+Legacy aliases `.card-glass`, `.glass-sidebar`, `.card-terminal` have been **removed**.
+
+Use `style={{ color: "var(--bull)" }}` not `style={{ color: "#12b76a" }}`.
 
 Tailwind utility classes are preferred for spacing, layout, and typography.
 Custom overrides use inline `style` with CSS variables only.
@@ -251,7 +261,7 @@ Run `npm run typecheck` before committing. The build must pass with zero TypeScr
 
 ## What NOT to do
 
-- ❌ Hardcode hex colors in JSX — use CSS variables (`var(--bull)` not `"#059669"`)
+- ❌ Hardcode hex colors in JSX — use CSS variables (`var(--bull)` not `"#12b76a"`)
 - ❌ Write `any` — use generics or `unknown`
 - ❌ Direct array indexed access without guard when `noUncheckedIndexedAccess` is on
 - ❌ Put constants inside components — move to `src/constants/index.ts`
@@ -260,6 +270,9 @@ Run `npm run typecheck` before committing. The build must pass with zero TypeScr
 - ❌ Mix logic and markup in the same component when it exceeds 150 lines
 - ❌ Import with relative paths across feature boundaries — use `@/` alias
 - ❌ Use old token names: `--color-buy`, `--color-sell`, `--sidebar-bg`, `--table-header-bg` — these no longer exist; use `--bull`, `--bear`, `--card`, `--muted`
+- ❌ Use removed classes: `.card-glass`, `.glass-sidebar`, `.glass-panel`, `.card-terminal` — use `.card-surface`, `.sidebar-surface`
+- ❌ Use `backdrop-filter` or glassmorphism — design is solid surfaces with TailAdmin shadows
+- ❌ Reference `Inter` font — use `Outfit`
 - ❌ Add `@import url()` after `@import "tailwindcss"` in CSS — use `<link>` in `layout.tsx` for external fonts
 - ❌ Add plugins via `require()` in `tailwind.config.ts` — use `@plugin "name"` in `globals.css`
 - ❌ Rely on `tailwind.config.ts` for theme tokens — all tokens go in `@theme inline {}` inside `globals.css`

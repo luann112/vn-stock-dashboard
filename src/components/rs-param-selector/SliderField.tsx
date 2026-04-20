@@ -19,7 +19,7 @@ interface SliderFieldProps {
 const NUMBER_INPUT_STYLE: React.CSSProperties = {
   width: "60px",
   padding: "2px 6px",
-  borderRadius: "6px",
+  borderRadius: "8px",
   border: "1px solid var(--input-border)",
   backgroundColor: "var(--input)",
   color: "var(--foreground)",

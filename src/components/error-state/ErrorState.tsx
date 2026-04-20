@@ -18,7 +18,7 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
       {onRetry && (
         <button
           onClick={onRetry}
-          className="text-xs px-3 py-1.5 rounded-md transition-colors"
+          className="text-sm font-medium px-4 py-2 rounded-lg shadow-xs transition-colors"
           style={{
             background: "var(--secondary)",
             color: "var(--foreground)",

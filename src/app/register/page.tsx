@@ -93,11 +93,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isLoading || !name || !email || !password}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-opacity disabled:opacity-50"
-          style={{
-            background: "var(--primary)",
-            color: "var(--primary-foreground)",
-          }}
+          className="btn-primary w-full flex items-center justify-center gap-2 py-3 rounded-lg disabled:opacity-50"
         >
           {isLoading ? (
             <span>Đang đăng ký…</span>

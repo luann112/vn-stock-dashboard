@@ -62,8 +62,8 @@ export default function AlertsPage() {
       </div>
 
       <div
-        className="rounded-xl border overflow-hidden"
-        style={{ borderColor: "var(--border)", background: "var(--background)" }}
+        className="rounded-xl border overflow-hidden card-surface"
+        style={{ borderColor: "var(--border)" }}
       >
         <table className="w-full text-sm">
           <thead>

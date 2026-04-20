@@ -7,95 +7,113 @@
 /* Fonts loaded via <link> in layout.tsx to avoid @import ordering issues */
 
 /* ============================================================
-   VN STOCK DASHBOARD — Design System v2
-   Theme: White × Blue · Clean · Minimal · Glassmorphism
+   VN STOCK DASHBOARD — Design System v3
+   Theme: TailAdmin · Clean · Professional · Solid surfaces
    ============================================================ */
 
 :root {
   --font-size: 14px;
-  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", "Fira Code", "Cascadia Code", monospace;
 
-  /* ── Core UI — light glassmorphism ── */
-  --background:            #f8faff;
-  --foreground:            #0f172a;
-  --card:                  rgba(255, 255, 255, 0.72);
-  --card-foreground:       #0f172a;
-  --popover:               rgba(255, 255, 255, 0.95);
-  --popover-foreground:    #0f172a;
+  /* ── TailAdmin Gray scale ── */
+  --gray-25:  #fcfcfd;
+  --gray-50:  #f9fafb;
+  --gray-100: #f2f4f7;
+  --gray-200: #e4e7ec;
+  --gray-300: #d0d5dd;
+  --gray-400: #98a2b3;
+  --gray-500: #667085;
+  --gray-600: #475467;
+  --gray-700: #344054;
+  --gray-800: #1d2939;
+  --gray-900: #101828;
+  --gray-950: #0c111d;
 
-  /* Primary: energetic blue */
-  --primary:               #3b82f6;  /* blue-500 */
+  /* ── Core UI ── */
+  --background:            var(--gray-50);
+  --foreground:            var(--gray-900);
+  --card:                  #ffffff;
+  --card-foreground:       var(--gray-900);
+  --popover:               #ffffff;
+  --popover-foreground:    var(--gray-900);
+
+  /* Primary: TailAdmin brand indigo */
+  --primary:               #465fff;
   --primary-foreground:    #ffffff;
-  --primary-hover:         #2563eb;  /* blue-600 */
+  --primary-hover:         #3641f5;
 
-  --secondary:             rgba(239, 246, 255, 0.8);  /* blue-50 glass */
-  --secondary-foreground:  #1e3a8a;
+  --secondary:             var(--gray-100);
+  --secondary-foreground:  var(--gray-700);
 
-  --muted:                 rgba(241, 245, 249, 0.65);
-  --muted-foreground:      #64748b;
+  --muted:                 var(--gray-100);
+  --muted-foreground:      var(--gray-500);
 
-  --accent:                rgba(219, 234, 254, 0.85); /* blue-100 glass */
-  --accent-foreground:     #1d4ed8;  /* blue-700 */
+  --accent:                #ecf3ff;
+  --accent-foreground:     #465fff;
 
-  --destructive:           #dc2626;
+  --destructive:           #f04438;
   --destructive-foreground:#ffffff;
 
-  --border:                rgba(59, 130, 246, 0.14);
-  --input:                 rgba(255, 255, 255, 0.85);
-  --input-border:          rgba(59, 130, 246, 0.25);
-  --ring:                  #3b82f6;
+  --border:                var(--gray-200);
+  --input:                 #ffffff;
+  --input-border:          var(--gray-300);
+  --ring:                  #465fff;
 
-  /* ── Stock semantic colors ── */
-  --bull:                  #059669;  /* emerald-600 — good contrast on white */
-  --bull-muted:            rgba(5, 150, 105, 0.10);
-  --bull-foreground:       #065f46;  /* emerald-800 */
-  --bear:                  #dc2626;  /* red-600 */
-  --bear-muted:            rgba(220, 38, 38, 0.10);
-  --bear-foreground:       #7f1d1d;  /* red-900 */
-  --neutral:               #64748b;
-  --neutral-muted:         rgba(100, 116, 139, 0.10);
-  --neutral-foreground:    #1e293b;
-  --signal-buy:            #059669;
-  --signal-sell:           #dc2626;
-  --signal-hold:           #d97706;  /* amber-600 */
+  /* ── Stock semantic colors (TailAdmin success/error) ── */
+  --bull:                  #12b76a;
+  --bull-muted:            rgba(18, 183, 106, 0.10);
+  --bull-foreground:       #054f31;
+  --bear:                  #f04438;
+  --bear-muted:            rgba(240, 68, 56, 0.10);
+  --bear-foreground:       #7a271a;
+  --neutral:               var(--gray-500);
+  --neutral-muted:         rgba(102, 112, 133, 0.10);
+  --neutral-foreground:    var(--gray-800);
+  --signal-buy:            #12b76a;
+  --signal-sell:           #f04438;
+  --signal-hold:           #f79009;
+  --signal-hold-muted:     rgba(247, 144, 9, 0.12);
 
   /* ── Chart palette ── */
-  --chart-1:  #3b82f6;  /* blue   — primary series */
-  --chart-2:  #10b981;  /* emerald */
-  --chart-3:  #f59e0b;  /* amber  */
-  --chart-4:  #ef4444;  /* red    */
-  --chart-5:  #8b5cf6;  /* violet */
-  --chart-6:  #06b6d4;  /* cyan   */
-  --chart-7:  #84cc16;  /* lime   */
-  --chart-8:  #f97316;  /* orange */
-  --chart-9:  #ec4899;  /* pink   */
-  --chart-10: #6366f1;  /* indigo */
+  --chart-1:  #465fff;
+  --chart-2:  #12b76a;
+  --chart-3:  #f79009;
+  --chart-4:  #f04438;
+  --chart-5:  #7a5af8;
+  --chart-6:  #0ba5ec;
+  --chart-7:  #66c61c;
+  --chart-8:  #fb6514;
+  --chart-9:  #ee46bc;
+  --chart-10: #6172f3;
 
   /* ── Candlestick colors (light mode) ── */
-  --candle-bull:        #059669;
-  --candle-bull-wick:   #047857;
-  --candle-bear:        #dc2626;
-  --candle-bear-wick:   #b91c1c;
+  --candle-bull:        #12b76a;
+  --candle-bull-wick:   #039855;
+  --candle-bear:        #f04438;
+  --candle-bear-wick:   #d92d20;
 
   /* ── Heatmap gradient steps ── */
-  --heat-strong-bull:  rgba(5, 150, 105, 0.82);
-  --heat-mid-bull:     rgba(5, 150, 105, 0.58);
-  --heat-light-bull:   rgba(5, 150, 105, 0.30);
-  --heat-faint-bull:   rgba(5, 150, 105, 0.13);
-  --heat-neutral:      rgba(100, 116, 139, 0.11);
-  --heat-faint-bear:   rgba(220, 38, 38, 0.13);
-  --heat-light-bear:   rgba(220, 38, 38, 0.30);
-  --heat-mid-bear:     rgba(220, 38, 38, 0.58);
-  --heat-strong-bear:  rgba(220, 38, 38, 0.82);
+  --heat-strong-bull:  rgba(18, 183, 106, 0.82);
+  --heat-mid-bull:     rgba(18, 183, 106, 0.58);
+  --heat-light-bull:   rgba(18, 183, 106, 0.30);
+  --heat-faint-bull:   rgba(18, 183, 106, 0.13);
+  --heat-neutral:      rgba(102, 112, 133, 0.11);
+  --heat-faint-bear:   rgba(240, 68, 56, 0.13);
+  --heat-light-bear:   rgba(240, 68, 56, 0.30);
+  --heat-mid-bear:     rgba(240, 68, 56, 0.58);
+  --heat-strong-bear:  rgba(240, 68, 56, 0.82);
 
-  /* ── Glassmorphism helpers ── */
-  --glass-blur:     16px;
-  --glass-shadow:   0 8px 32px rgba(59, 130, 246, 0.10), 0 2px 8px rgba(0, 0, 0, 0.04);
-  --glass-border:   rgba(255, 255, 255, 0.60);
+  /* ── TailAdmin Shadow system ── */
+  --ta-shadow-xs:  0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  --ta-shadow-sm:  0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+  --ta-shadow-md:  0px 4px 8px -2px rgba(16, 24, 40, 0.10), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --ta-shadow-lg:  0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --ta-shadow-xl:  0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  --ta-shadow-focus-ring: 0px 0px 0px 4px rgba(70, 95, 255, 0.12);
 
-  /* ── Radius ── */
-  --radius: 12px;
+  /* ── Radius (TailAdmin uses Tailwind defaults: rounded-lg = 8px) ── */
+  --radius: 8px;
 
   /* ── Sidebar ── */
   --sidebar-width:     240px;
@@ -111,57 +129,56 @@
   --font-weight-bold:     700;
 }
 
-/* ── Dark mode (optional override) ── */
+/* ── Dark mode ── */
 .dark {
-  --background:        #0a0a0f;
-  --foreground:        #f1f5f9;
-  --card:              rgba(17, 19, 24, 0.85);
-  --card-foreground:   #f1f5f9;
-  --popover:           #1a1d24;
-  --popover-foreground:#f1f5f9;
-  --primary:           #60a5fa;  /* blue-400 — brighter in dark */
-  --primary-foreground:#0a0a0f;
-  --primary-hover:     #3b82f6;
-  --secondary:         #1e2430;
-  --secondary-foreground:#f1f5f9;
-  --muted:             rgba(22, 26, 34, 0.8);
-  --muted-foreground:  #64748b;
-  --accent:            rgba(30, 64, 175, 0.25);
-  --accent-foreground: #bfdbfe;  /* blue-200 */
-  --destructive:       #ef4444;
-  --destructive-foreground:#fafafa;
-  --border:            rgba(59, 130, 246, 0.15);
-  --input:             rgba(22, 26, 34, 0.9);
-  --input-border:      rgba(59, 130, 246, 0.20);
-  --ring:              #60a5fa;
-  --glass-shadow:      0 8px 32px rgba(0, 0, 0, 0.30);
-  --glass-border:      rgba(255, 255, 255, 0.08);
+  --background:        var(--gray-900);
+  --foreground:        #f2f4f7;
+  --card:              var(--gray-800);
+  --card-foreground:   #f2f4f7;
+  --popover:           var(--gray-800);
+  --popover-foreground:#f2f4f7;
+  --primary:           #6172f3;
+  --primary-foreground:#ffffff;
+  --primary-hover:     #465fff;
+  --secondary:         var(--gray-700);
+  --secondary-foreground:#f2f4f7;
+  --muted:             var(--gray-700);
+  --muted-foreground:  var(--gray-400);
+  --accent:            rgba(70, 95, 255, 0.12);
+  --accent-foreground: #9cb9ff;
+  --destructive:       #f97066;
+  --destructive-foreground:#ffffff;
+  --border:            var(--gray-700);
+  --input:             var(--gray-800);
+  --input-border:      var(--gray-600);
+  --ring:              #6172f3;
 
-  --bull:              #34d399;
-  --bull-muted:        rgba(52, 211, 153, 0.12);
-  --bull-foreground:   #d1fae5;
-  --bear:              #f87171;
-  --bear-muted:        rgba(248, 113, 113, 0.12);
-  --bear-foreground:   #fee2e2;
-  --neutral:           #94a3b8;
-  --neutral-muted:     rgba(148, 163, 184, 0.12);
-  --neutral-foreground:#e2e8f0;
+  --bull:              #32d583;
+  --bull-muted:        rgba(50, 213, 131, 0.12);
+  --bull-foreground:   #d1fadf;
+  --bear:              #f97066;
+  --bear-muted:        rgba(249, 112, 102, 0.12);
+  --bear-foreground:   #fee4e2;
+  --neutral:           var(--gray-400);
+  --neutral-muted:     rgba(152, 162, 179, 0.12);
+  --neutral-foreground:#e4e7ec;
+  --signal-hold-muted: rgba(253, 176, 34, 0.12);
 
-  --chart-1:  #60a5fa;
-  --chart-2:  #34d399;
-  --chart-3:  #fbbf24;
-  --chart-4:  #f87171;
-  --chart-5:  #a78bfa;
-  --chart-6:  #67e8f9;
-  --chart-7:  #a3e635;
-  --chart-8:  #fb923c;
-  --chart-9:  #f472b6;
-  --chart-10: #818cf8;
+  --chart-1:  #6172f3;
+  --chart-2:  #32d583;
+  --chart-3:  #fdb022;
+  --chart-4:  #f97066;
+  --chart-5:  #9b8afb;
+  --chart-6:  #36bffa;
+  --chart-7:  #85e13a;
+  --chart-8:  #fd853a;
+  --chart-9:  #f670c7;
+  --chart-10: #7592ff;
 
-  --candle-bull:      #34d399;
-  --candle-bull-wick: #10b981;
-  --candle-bear:      #f87171;
-  --candle-bear-wick: #ef4444;
+  --candle-bull:      #32d583;
+  --candle-bull-wick: #12b76a;
+  --candle-bear:      #f97066;
+  --candle-bear-wick: #f04438;
 }
 
 /* ── Tailwind v4 @theme mapping ── */
@@ -197,6 +214,7 @@
   --color-signal-buy:          var(--signal-buy);
   --color-signal-sell:         var(--signal-sell);
   --color-signal-hold:         var(--signal-hold);
+  --color-signal-hold-muted:   var(--signal-hold-muted);
 
   --color-chart-1:  var(--chart-1);
   --color-chart-2:  var(--chart-2);
@@ -209,6 +227,19 @@
   --color-chart-9:  var(--chart-9);
   --color-chart-10: var(--chart-10);
 
+  --color-gray-25:  var(--gray-25);
+  --color-gray-50:  var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+  --color-gray-950: var(--gray-950);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -216,29 +247,25 @@
 
   --font-sans: var(--font-family);
   --font-mono: var(--font-mono);
+
+  --shadow-xs: var(--ta-shadow-xs);
+  --shadow-sm: var(--ta-shadow-sm);
+  --shadow-md: var(--ta-shadow-md);
+  --shadow-lg: var(--ta-shadow-lg);
+  --shadow-xl: var(--ta-shadow-xl);
 }
 
-/* ── Background gradient mesh ── */
+/* ── Base styles ── */
 @layer base {
   html {
     font-size: var(--font-size);
     font-family: var(--font-family);
     min-height: 100%;
-    /* Glassmorphism mesh gradient — light mode */
-    background:
-      radial-gradient(ellipse 90% 60% at 15% 0%,   rgba(219, 234, 254, 0.70) 0%, transparent 65%),
-      radial-gradient(ellipse 70% 50% at 85% 100%,  rgba(237, 233, 254, 0.60) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 40% at 50%  50%,  rgba(224, 242, 254, 0.30) 0%, transparent 70%),
-      #f8faff;
-    background-attachment: fixed;
+    background: var(--background);
   }
 
-  /* Dark mode mesh */
   html.dark {
-    background:
-      radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(30, 64, 175, 0.20) 0%, transparent 65%),
-      radial-gradient(ellipse 60% 50% at 90% 100%,  rgba(88, 28, 135, 0.15) 0%, transparent 65%),
-      #0a0a0f;
+    background: var(--gray-900);
   }
 
   * {
@@ -253,7 +280,7 @@
   }
 
   body {
-    background: transparent; /* gradient lives on html */
+    background: transparent;
     color: var(--foreground);
     font-family: var(--font-family);
     line-height: 1.5;
@@ -262,34 +289,18 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Scrollbar — clean light style */
+  /* Scrollbar — clean neutral style */
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.20); border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.40); }
+  ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+  .dark ::-webkit-scrollbar-thumb { background: var(--gray-600); }
+  .dark ::-webkit-scrollbar-thumb:hover { background: var(--gray-500); }
 }
 
 /* ── Utility classes ── */
 @layer utilities {
-  /* ── Glassmorphism card ── */
-  .glass-card {
-    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    box-shadow: var(--glass-shadow);
-  }
-
-  .glass-sidebar {
-    backdrop-filter: blur(20px) saturate(200%);
-    -webkit-backdrop-filter: blur(20px) saturate(200%);
-    box-shadow: 4px 0 32px rgba(59, 130, 246, 0.06), 1px 0 0 var(--border);
-  }
-
-  .glass-panel {
-    backdrop-filter: blur(12px) saturate(160%);
-    -webkit-backdrop-filter: blur(12px) saturate(160%);
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.06), inset 0 1px 0 rgba(255,255,255,0.6);
-  }
-
   /* ── Numeric font ── */
   .font-numeric {
     font-family: var(--font-mono);
@@ -315,20 +326,27 @@
   .badge-buy {
     background: var(--bull-muted);
     color: var(--bull-foreground);
-    border: 1px solid rgba(5, 150, 105, 0.20);
+    border: 1px solid rgba(18, 183, 106, 0.20);
   }
   .badge-sell {
     background: var(--bear-muted);
     color: var(--bear-foreground);
-    border: 1px solid rgba(220, 38, 38, 0.20);
+    border: 1px solid rgba(240, 68, 56, 0.20);
   }
   .badge-hold {
-    background: rgba(217, 119, 6, 0.10);
-    color: #92400e;
-    border: 1px solid rgba(217, 119, 6, 0.20);
+    background: var(--signal-hold-muted);
+    color: #93370d;
+    border: 1px solid rgba(247, 144, 9, 0.20);
+  }
+  .dark .badge-buy {
+    color: var(--bull);
+  }
+  .dark .badge-sell {
+    color: var(--bear);
   }
   .dark .badge-hold {
     color: var(--signal-hold);
+    border-color: rgba(253, 176, 34, 0.25);
   }
 
   /* ── Heatmap cells ── */
@@ -337,20 +355,19 @@
   .heatmap-none     { background: transparent; color: var(--muted-foreground); }
   .heatmap-conflict { background: color-mix(in srgb, var(--neutral) 10%, transparent); color: var(--neutral); }
 
-  /* ── Card variants ── */
-  .card-terminal {
+  /* ── Card — solid surface with TailAdmin shadow ── */
+  .card-surface {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    box-shadow: var(--ta-shadow-sm);
   }
 
-  .card-glass {
+  /* ── Sidebar ── */
+  .sidebar-surface {
     background: var(--card);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius);
-    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    box-shadow: var(--glass-shadow);
+    border-right: 1px solid var(--border);
+    box-shadow: var(--ta-shadow-xs);
   }
 
   /* ── Primary button ── */
@@ -358,16 +375,54 @@
     background: var(--primary);
     color: var(--primary-foreground);
     border-radius: var(--radius);
-    font-weight: var(--font-weight-semibold);
-    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
-    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.30);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.875rem;
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: var(--ta-shadow-xs);
   }
   .btn-primary:hover:not(:disabled) {
     background: var(--primary-hover);
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.40);
-    transform: translateY(-1px);
+    box-shadow: var(--ta-shadow-sm);
   }
-  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:focus-visible {
+    box-shadow: var(--ta-shadow-focus-ring);
+    outline: none;
+  }
+  .btn-primary:disabled {
+    background: #c2d6ff;
+    cursor: not-allowed;
+  }
+  .dark .btn-primary:disabled {
+    background: var(--gray-700);
+    color: var(--gray-400);
+  }
+
+  /* ── Outline button (TailAdmin secondary) ── */
+  .btn-outline {
+    background: var(--card);
+    color: var(--gray-700);
+    border-radius: var(--radius);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.875rem;
+    border: 1px solid var(--gray-300);
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: var(--ta-shadow-xs);
+  }
+  .btn-outline:hover:not(:disabled) {
+    background: var(--gray-50);
+  }
+  .btn-outline:focus-visible {
+    box-shadow: var(--ta-shadow-focus-ring);
+    outline: none;
+  }
+  .dark .btn-outline {
+    background: var(--gray-800);
+    color: var(--gray-200);
+    border-color: var(--gray-600);
+  }
+  .dark .btn-outline:hover:not(:disabled) {
+    background: var(--gray-700);
+  }
 
   /* ── Layout helpers ── */
   .layout-sidebar          { width: var(--sidebar-width); }

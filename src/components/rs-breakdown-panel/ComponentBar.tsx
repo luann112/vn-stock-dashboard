@@ -1,6 +1,7 @@
 "use client";
 
 import { RSComponentTooltip } from "./RSComponentTooltip";
+import { ThresholdSegments } from "./ThresholdSegments";
 
 export interface ThresholdSegment {
   max: number;
@@ -23,18 +24,6 @@ interface ComponentBarProps {
   isBinary?: boolean;
   isBinaryUp?: boolean;
   tooltipContent?: string;
-}
-
-function thresholdColor(current: number, segments: ThresholdSegment[]): string {
-  const total = segments.length;
-  for (let i = 0; i < total; i++) {
-    const seg = segments[i];
-    if (!seg) continue;
-    if (current < seg.max) {
-      return i < total / 3 ? "var(--bear)" : "var(--signal-hold)";
-    }
-  }
-  return "var(--bull)";
 }
 
 export function ComponentBar({
@@ -90,30 +79,7 @@ export function ComponentBar({
       />
 
       {thresholds && (
-        <div className="flex gap-2" style={{ marginTop: "-2px" }}>
-          {thresholds.segments.map((seg) => {
-            const isActive =
-              thresholds.current < seg.max &&
-              (thresholds.segments.indexOf(seg) === 0 ||
-                thresholds.current >=
-                  (thresholds.segments[thresholds.segments.indexOf(seg) - 1]?.max ?? 0));
-            const color = isActive ? thresholdColor(thresholds.current, thresholds.segments) : undefined;
-            return (
-              <span
-                key={seg.label}
-                className="text-muted-foreground"
-                style={{
-                  fontSize: "10px",
-                  lineHeight: "14px",
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive ? color : undefined,
-                }}
-              >
-                {seg.label}
-              </span>
-            );
-          })}
-        </div>
+        <ThresholdSegments segments={thresholds.segments} current={thresholds.current} />
       )}
 
       <div className="flex items-baseline justify-between gap-2">

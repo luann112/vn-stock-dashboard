@@ -54,7 +54,7 @@ export const tokens = {
 
   // ── Typography ────────────────────────────────────────────
   font: {
-    sans:    '"Inter", -apple-system, sans-serif',
+    sans:    '"Outfit", -apple-system, sans-serif',
     mono:    '"IBM Plex Mono", "Fira Code", monospace',
     numeric: '"IBM Plex Mono", monospace', // tabular nums
   },
@@ -77,11 +77,11 @@ export const tokens = {
 
   // ── Border radius ─────────────────────────────────────────
   radius: {
-    sm: "8px",
-    md: "10px",
-    lg: "12px",  // default card
-    xl: "16px",
-    "2xl": "20px",
+    sm: "4px",
+    md: "6px",
+    lg: "8px",   // default card/button (TailAdmin rounded-lg)
+    xl: "12px",  // panels, dropdowns
+    "2xl": "16px", // modals
   },
 } as const;
 
@@ -90,46 +90,46 @@ export const tokens = {
 export function getTradingViewTheme(isDark = true) {
   return {
     layout: {
-      background:    { color: isDark ? "#111318" : "#ffffff" },
-      textColor:     isDark ? "#94a3b8" : "#64748b",
+      background:    { color: isDark ? "#1d2939" : "#ffffff" },
+      textColor:     isDark ? "#98a2b3" : "#667085",
       fontSize:      12,
       fontFamily:    '"IBM Plex Mono", monospace',
     },
     grid: {
-      vertLines:   { color: isDark ? "#1e2430" : "#e2e8f0", style: 1 },
-      horzLines:   { color: isDark ? "#1e2430" : "#e2e8f0", style: 1 },
+      vertLines:   { color: isDark ? "#344054" : "#e4e7ec", style: 1 },
+      horzLines:   { color: isDark ? "#344054" : "#e4e7ec", style: 1 },
     },
     crosshair: {
-      vertLine: { color: isDark ? "#22d3ee" : "#0891b2", width: 1, style: 1, labelBackgroundColor: isDark ? "#22d3ee" : "#0891b2" },
-      horzLine: { color: isDark ? "#22d3ee" : "#0891b2", width: 1, style: 1, labelBackgroundColor: isDark ? "#22d3ee" : "#0891b2" },
+      vertLine: { color: isDark ? "#6172f3" : "#465fff", width: 1, style: 1, labelBackgroundColor: isDark ? "#6172f3" : "#465fff" },
+      horzLine: { color: isDark ? "#6172f3" : "#465fff", width: 1, style: 1, labelBackgroundColor: isDark ? "#6172f3" : "#465fff" },
     },
     timeScale: {
-      borderColor:     isDark ? "#1e2430" : "#e2e8f0",
+      borderColor:     isDark ? "#344054" : "#e4e7ec",
       timeVisible:     true,
       secondsVisible:  false,
     },
     rightPriceScale: {
-      borderColor:     isDark ? "#1e2430" : "#e2e8f0",
+      borderColor:     isDark ? "#344054" : "#e4e7ec",
     },
   };
 }
 
 export function getCandlestickOptions(isDark = true) {
   return {
-    upColor:          isDark ? "#34d399" : "#10b981",
-    downColor:        isDark ? "#f87171" : "#ef4444",
-    borderUpColor:    isDark ? "#10b981" : "#059669",
-    borderDownColor:  isDark ? "#ef4444" : "#dc2626",
-    wickUpColor:      isDark ? "#10b981" : "#059669",
-    wickDownColor:    isDark ? "#ef4444" : "#dc2626",
+    upColor:          isDark ? "#32d583" : "#12b76a",
+    downColor:        isDark ? "#f97066" : "#f04438",
+    borderUpColor:    isDark ? "#12b76a" : "#039855",
+    borderDownColor:  isDark ? "#f04438" : "#d92d20",
+    wickUpColor:      isDark ? "#12b76a" : "#039855",
+    wickDownColor:    isDark ? "#f04438" : "#d92d20",
   };
 }
 
 // ── MA line colors (chart library needs raw hex) ───────────
 export function getMaColors(isDark = true) {
   return {
-    short: isDark ? "#22d3ee" : "#0891b2",
-    long:  isDark ? "#fbbf24" : "#f59e0b",
+    short: isDark ? "#36bffa" : "#0ba5ec",
+    long:  isDark ? "#fdb022" : "#f79009",
   };
 }
 

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  RS_SIGNAL_CONFIG,
-  LOOKBACK_LABELS,
-  RS_RATING_THRESHOLDS,
-  RS_NEAR_HIGH_THRESHOLDS,
-  RS_DAYS_THRESHOLDS,
-} from "@/constants";
+import { RS_SIGNAL_CONFIG, LOOKBACK_LABELS, RS_RATING_THRESHOLDS, RS_NEAR_HIGH_THRESHOLDS, RS_DAYS_THRESHOLDS } from "@/constants";
 import { RS_TOOLTIPS } from "@/constants/rs-tooltips";
 import type { RSScoreData } from "@/types";
 import { ComponentBar } from "./ComponentBar";
@@ -27,7 +21,7 @@ export function RSBreakdownPanel({ data }: RSBreakdownPanelProps) {
 
   return (
     <div
-      className="card-glass flex flex-col gap-6 rounded-2xl border p-6"
+      className="card-surface flex flex-col gap-6 rounded-2xl border p-6"
       style={{
         backgroundColor: "var(--card)",
         borderColor: "var(--border)",
@@ -144,11 +138,8 @@ export function RSBreakdownPanel({ data }: RSBreakdownPanelProps) {
         />
       </div>
 
-      {/* Footer */}
-      <div className="flex flex-col gap-1 text-xs text-muted-foreground">
-        <p>Score = RS Rating (40%) + RS Trending (20%) + RS Near High (20%) + RS Days (20%)</p>
-        <p>Đây là công cụ lọc, không phải tín hiệu mua. Kết hợp với price action và market regime.</p>
-        <p>Kiểm tra: VN-Index {"> "}MA50 {"> "}MA200 trước khi hành động.</p>
+      <div className="text-xs text-muted-foreground space-y-1">
+        <p>Score = RS Rating (40%) + RS Trending (20%) + RS Near High (20%) + RS Days (20%). Đây là công cụ lọc, không phải tín hiệu mua. Kết hợp với price action và market regime. Kiểm tra: VN-Index {"> "}MA50 {"> "}MA200 trước khi hành động.</p>
       </div>
     </div>
   );

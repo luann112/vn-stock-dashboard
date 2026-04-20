@@ -5,7 +5,6 @@ import { usePrice } from "@/hooks/usePrice";
 import { useSignal } from "@/hooks/useSignal";
 import { getCompanyName } from "@/lib/api";
 import { formatPrice, formatPercent } from "@/lib/utils";
-import { CandlestickChart } from "@/components/candlestick-chart";
 import { RsiGauge } from "@/components/rsi-gauge";
 import { SignalBadge } from "@/components/signal-badge";
 import { StatCard } from "./StatCard";
@@ -23,7 +22,7 @@ export function ChartPanel({ symbol, onClose }: ChartPanelProps) {
 
   return (
     <div
-      className="rounded-xl border overflow-hidden card-glass"
+      className="rounded-xl border overflow-hidden card-surface"
       style={{ borderColor: "var(--border)" }}
     >
       {/* Header */}
@@ -95,16 +94,10 @@ export function ChartPanel({ symbol, onClose }: ChartPanelProps) {
         />
       </div>
 
-      {/* Chart + RSI */}
-      <div className="flex">
-        <div className="flex-1 p-4">
-          <CandlestickChart symbol={symbol} />
-        </div>
-        {signal && (
-          <div
-            className="w-44 flex flex-col items-center justify-center p-4 border-l"
-            style={{ borderColor: "var(--border)" }}
-          >
+      {/* RSI */}
+      {signal && (
+        <div className="flex items-center justify-center px-5 py-4">
+          <div className="flex flex-col items-center">
             <div
               className="text-xs font-semibold mb-3 uppercase tracking-wide"
               style={{ color: "var(--muted-foreground)" }}
@@ -113,8 +106,8 @@ export function ChartPanel({ symbol, onClose }: ChartPanelProps) {
             </div>
             <RsiGauge value={signal.rsi ?? 50} size="lg" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

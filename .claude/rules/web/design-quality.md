@@ -1,6 +1,12 @@
 > This file extends [common/patterns.md](../common/patterns.md) with web-specific design-quality guidance.
+> For exact tokens, components, and spacing specs see [design-system.md](design-system.md).
 
 # Web Design Quality Standards
+
+## Style Direction
+
+TailAdmin — clean, professional, solid surfaces with intentional depth through the shadow scale.
+Not glassmorphism. Not generic gray-on-white. Every surface should feel structured and purposeful.
 
 ## Anti-Template Policy
 
@@ -9,12 +15,11 @@ Do not ship generic template-looking UI. Frontend output should look intentional
 ### Banned Patterns
 
 - Default card grids with uniform spacing and no hierarchy
-- Stock hero section with centered headline, gradient blob, and generic CTA
 - Unmodified library defaults passed off as finished design
 - Flat layouts with no layering, depth, or motion
 - Uniform radius, spacing, and shadows across every component
-- Safe gray-on-white styling with one decorative accent color
 - Dashboard-by-numbers layouts with sidebar + cards + charts and no point of view
+- Glassmorphism, gradient meshes, or backdrop-filter blur on panels
 - Default font stacks used without a deliberate reason
 
 ### Required Qualities
@@ -23,41 +28,28 @@ Every meaningful frontend surface should demonstrate at least four of these:
 
 1. Clear hierarchy through scale contrast
 2. Intentional rhythm in spacing, not uniform padding everywhere
-3. Depth or layering through overlap, shadows, surfaces, or motion
-4. Typography with character and a real pairing strategy
-5. Color used semantically, not just decoratively
+3. Depth through shadow scale (xs → xl), not transparency or blur
+4. Typography with character — Outfit for UI, IBM Plex Mono for data
+5. Color used semantically — bull/bear/hold, not just decoratively
 6. Hover, focus, and active states that feel designed
-7. Grid-breaking editorial or bento composition where appropriate
-8. Texture, grain, or atmosphere when it fits the visual direction
-9. Motion that clarifies flow instead of distracting from it
-10. Data visualization treated as part of the design system, not an afterthought
+7. Data visualization treated as part of the design system, not an afterthought
+8. Motion that clarifies flow instead of distracting from it
 
 ## Before Writing Frontend Code
 
-1. Pick a specific style direction. Avoid vague defaults like "clean minimal".
-2. Define a palette intentionally.
-3. Choose typography deliberately.
-4. Gather at least a small set of real references.
-5. Use ECC design/frontend skills where relevant.
-
-## Worthwhile Style Directions
-
-- Editorial / magazine
-- Neo-brutalism
-- Glassmorphism with real depth
-- Dark luxury or light luxury with disciplined contrast
-- Bento layouts
-- Scrollytelling
-- 3D integration
-- Swiss / International
-- Retro-futurism
-
-Do not default to dark mode automatically. Choose the visual direction the product actually wants.
+1. Read [design-system.md](design-system.md) for exact tokens and patterns
+2. Use `var(--token)` — never hardcode hex in JSX
+3. Pick the right shadow level for the component's elevation
+4. Choose the right radius: `rounded-lg` for buttons/inputs, `rounded-xl` for panels, `rounded-2xl` for modals, `rounded-full` for badges
+5. Both light and dark themes must look intentional
 
 ## Component Checklist
 
-- [ ] Does it avoid looking like a default Tailwind or shadcn template?
-- [ ] Does it have intentional hover/focus/active states?
-- [ ] Does it use hierarchy rather than uniform emphasis?
+- [ ] Uses `.card-surface` or `.sidebar-surface` — not legacy glass classes
+- [ ] Has intentional hover/focus/active states
+- [ ] Uses hierarchy rather than uniform emphasis
+- [ ] Shadow level matches the component's elevation (xs for flat, sm for cards, lg for modals)
 - [ ] Would this look believable in a real product screenshot?
-- [ ] If it supports both themes, do both light and dark feel intentional?
+- [ ] Both light and dark themes feel intentional
+- [ ] No hardcoded hex in inline styles
+- [ ] Badge uses `rounded-full`, button uses `rounded-lg`, modal uses `rounded-2xl`

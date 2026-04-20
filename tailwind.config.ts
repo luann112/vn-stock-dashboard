@@ -15,7 +15,7 @@ const config: Config = {
     extend: {
       // ── Fonts ──────────────────────────────────────────────
       fontFamily: {
-        sans:    ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        sans:    ["Outfit", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
         mono:    ["IBM Plex Mono", "Fira Code", "Cascadia Code", "monospace"],
         numeric: ["IBM Plex Mono", "monospace"], // alias cho số tài chính
       },
@@ -99,8 +99,9 @@ const config: Config = {
           10: "var(--chart-10)",
         },
 
-        // ── Gray scale ──
+        // ── TailAdmin Gray scale ──
         gray: {
+          25:  "var(--gray-25)",
           50:  "var(--gray-50)",
           100: "var(--gray-100)",
           200: "var(--gray-200)",
@@ -111,16 +112,17 @@ const config: Config = {
           700: "var(--gray-700)",
           800: "var(--gray-800)",
           900: "var(--gray-900)",
+          950: "var(--gray-950)",
         },
       },
 
       // ── Border radius ───────────────────────────────────────
       borderRadius: {
-        sm:  "calc(var(--radius) - 4px)", // 8px
-        md:  "calc(var(--radius) - 2px)", // 10px
-        lg:  "var(--radius)",             // 12px — default card
-        xl:  "calc(var(--radius) + 4px)", // 16px
-        "2xl": "calc(var(--radius) + 8px)", // 20px
+        sm:  "calc(var(--radius) - 4px)", // 4px — small elements
+        md:  "calc(var(--radius) - 2px)", // 6px — inputs
+        lg:  "var(--radius)",             // 8px — buttons, cards (TailAdmin default)
+        xl:  "calc(var(--radius) + 4px)", // 12px — panels, dropdowns
+        "2xl": "calc(var(--radius) + 8px)", // 16px — modals
       },
 
       // ── Font sizes — bổ sung price display sizes ────────────

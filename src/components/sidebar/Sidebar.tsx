@@ -28,8 +28,8 @@ export function Sidebar() {
 
   return (
     <aside
-      className="flex flex-col w-56 shrink-0 border-r h-full glass-sidebar"
-      style={{ background: "var(--card)", borderColor: "var(--border)" }}
+      className="flex flex-col w-56 shrink-0 border-r h-full sidebar-surface"
+      style={{ borderColor: "var(--border)" }}
     >
       <div
         className="flex items-center gap-2 px-4 py-4 border-b"
