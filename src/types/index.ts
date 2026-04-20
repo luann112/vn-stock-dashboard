@@ -17,28 +17,11 @@ export interface SignalData {
   price: number;
   rsi: number | null;
   ma_short: number | null; // EMA short period
-  ma_long: number | null;  // EMA long period
+  ma_long: number | null; // EMA long period
   macd: number | null;
   macd_signal: number | null;
   reasons: string[];
   analyzed_at: string; // ISO datetime
-}
-
-/** Single candlestick bar from GET /market/history/{symbol} */
-export interface OHLCVBar {
-  time: string; // ISO date string "YYYY-MM-DD"
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-}
-
-/** Full response from GET /market/history/{symbol} */
-export interface HistoryResponse {
-  symbol: string;
-  period: string;
-  bars: OHLCVBar[];
 }
 
 /** GET /watchlist — requires auth */
@@ -66,16 +49,16 @@ export interface RSParams {
 
 /** Breakdown of all 4 RS components */
 export interface RSComponentBreakdown {
-  rs_rating: number;           // 0–40 weighted
-  rs_rating_raw: number;       // 0–100 percentile
-  rs_trending: number;         // 0 or 20
+  rs_rating: number; // 0–40 weighted
+  rs_rating_raw: number; // 0–100 percentile
+  rs_trending: number; // 0 or 20
   rs_trending_direction: "up" | "down";
-  rs_near_high: number;        // 0–20 weighted
-  rs_near_high_pct: number;    // 0–1 fraction of high
-  rs_days: number;             // 0–20 weighted
-  rs_days_pct: number;         // 0–1 fraction outperform
-  rs_days_total: number;       // total index down-days
-  rs_days_outperform: number;  // days stock outperformed
+  rs_near_high: number; // 0–20 weighted
+  rs_near_high_pct: number; // 0–1 fraction of high
+  rs_days: number; // 0–20 weighted
+  rs_days_pct: number; // 0–1 fraction outperform
+  rs_days_total: number; // total index down-days
+  rs_days_outperform: number; // days stock outperformed
 }
 
 /** GET /rs/{symbol} */

@@ -1,7 +1,11 @@
 import { API_BASE_URL, COMPANY_NAMES, RS_DEFAULT_PARAMS } from "@/constants";
 import type {
-  PriceData, SignalData, OHLCVBar, HistoryResponse,
-  RSScoreData, RSScanData, RSPresetsResponse, RSParams,
+  PriceData,
+  SignalData,
+  RSScoreData,
+  RSScanData,
+  RSPresetsResponse,
+  RSParams,
 } from "@/types";
 
 // ---------------------------------------------------------------------------
@@ -50,19 +54,11 @@ export async function fetcher<T>(url: string): Promise<T> {
  * No HTTP roundtrip to /api/auth/session on every call.
  */
 export async function authedFetcher<T>(url: string): Promise<T> {
-  const headers: HeadersInit = _cachedToken
-    ? { Authorization: `Bearer ${_cachedToken}` }
-    : {};
+  const headers: HeadersInit = _cachedToken ? { Authorization: `Bearer ${_cachedToken}` } : {};
 
   const res = await fetch(url, { headers });
   if (!res.ok) throw new ApiError(res.status, url);
   return res.json() as Promise<T>;
-}
-
-/** History endpoint unwraps the { symbol, period, bars } envelope */
-export async function historyFetcher(url: string): Promise<OHLCVBar[]> {
-  const res = await authedFetcher<HistoryResponse>(url);
-  return res.bars;
 }
 
 // ---------------------------------------------------------------------------
@@ -71,17 +67,15 @@ export async function historyFetcher(url: string): Promise<OHLCVBar[]> {
 
 export const api = {
   /** GET /market/quote/{symbol} */
-  quote:    (symbol: string)                => `${API_BASE_URL}/market/quote/${symbol}`,
+  quote: (symbol: string) => `${API_BASE_URL}/market/quote/${symbol}`,
   /** GET /market/quotes?symbols=A,B,C */
-  quotes:   (symbols: string[])             => `${API_BASE_URL}/market/quotes?symbols=${symbols.join(",")}`,
-  /** GET /market/history/{symbol}?period=3M */
-  history:  (symbol: string, period = "3M") => `${API_BASE_URL}/market/history/${symbol}?period=${period}`,
+  quotes: (symbols: string[]) => `${API_BASE_URL}/market/quotes?symbols=${symbols.join(",")}`,
   /** GET /signals/{symbol} */
-  signals:  (symbol: string)                => `${API_BASE_URL}/signals/${symbol}`,
+  signals: (symbol: string) => `${API_BASE_URL}/signals/${symbol}`,
   /** GET /watchlist  (requires Bearer) */
-  watchlist: ()                             => `${API_BASE_URL}/watchlist`,
+  watchlist: () => `${API_BASE_URL}/watchlist`,
   /** GET /health */
-  health:   ()                              => `${API_BASE_URL}/health`,
+  health: () => `${API_BASE_URL}/health`,
 
   // ── RS Composite Score ──────────────────────────────────────
   /** GET /rs/{symbol}?lookback=&slope_window=&correction_window=&preset= */
@@ -91,11 +85,13 @@ export const api = {
     return qs ? `${base}?${qs}` : base;
   },
   /** GET /rs/scan?min_score=&sort_by=&limit=&... */
-  rsScan: (opts?: {
-    min_score?: number;
-    sort_by?: string;
-    limit?: number;
-  } & Partial<RSParams>) => {
+  rsScan: (
+    opts?: {
+      min_score?: number;
+      sort_by?: string;
+      limit?: number;
+    } & Partial<RSParams>
+  ) => {
     const parts: string[] = [];
     if (opts?.min_score !== undefined) parts.push(`min_score=${opts.min_score}`);
     if (opts?.sort_by) parts.push(`sort_by=${opts.sort_by}`);
@@ -128,7 +124,10 @@ function _rsQueryString(params?: Partial<RSParams>): string {
     if (params.slope_window && params.slope_window !== RS_DEFAULT_PARAMS.slope_window) {
       parts.push(`slope_window=${params.slope_window}`);
     }
-    if (params.correction_window && params.correction_window !== RS_DEFAULT_PARAMS.correction_window) {
+    if (
+      params.correction_window &&
+      params.correction_window !== RS_DEFAULT_PARAMS.correction_window
+    ) {
       parts.push(`correction_window=${params.correction_window}`);
     }
   }
@@ -146,10 +145,6 @@ export async function getPrice(symbol: string): Promise<PriceData> {
 export async function getPriceBatch(symbols: string[]): Promise<PriceData[]> {
   if (symbols.length === 0) return [];
   return authedFetcher<PriceData[]>(api.quotes(symbols));
-}
-
-export async function getOHLCV(symbol: string, period = "3M"): Promise<OHLCVBar[]> {
-  return historyFetcher(api.history(symbol, period));
 }
 
 export async function getSignal(symbol: string): Promise<SignalData> {

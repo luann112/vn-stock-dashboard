@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# Ensure nvm-managed node is on PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+npx lint-staged
